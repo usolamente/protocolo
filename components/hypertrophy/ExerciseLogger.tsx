@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useProtocolStore } from "@/lib/store";
+import { getExerciseGif } from "@/lib/data/exerciseGifs";
+import { ExerciseAnimation } from "@/components/hypertrophy/ExerciseAnimation";
 import type { ExerciseSpec, WeekDay } from "@/lib/types";
 import { cn, num } from "@/lib/utils";
 
@@ -15,6 +17,8 @@ export function ExerciseLogger({ exercise, day, ordinal }: Props) {
   const log = useProtocolStore((s) => s.getTodayLog());
   const logSet = useProtocolStore((s) => s.logSet);
   const removeLast = useProtocolStore((s) => s.removeLastSet);
+  const gif = getExerciseGif(exercise.id);
+  const [showGif, setShowGif] = useState(false);
 
   const loggedExercise = log?.exercises.find((e) => e.id === exercise.id);
   const sets = loggedExercise?.sets ?? [];
@@ -42,7 +46,34 @@ export function ExerciseLogger({ exercise, day, ordinal }: Props) {
             {num(ordinal)}
           </span>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm text-bone-50 leading-snug">{exercise.name}</h3>
+            {gif ? (
+              <button
+                onClick={() => setShowGif((v) => !v)}
+                className="text-left group/title flex items-center gap-1.5"
+              >
+                <h3 className="text-sm text-bone-50 leading-snug group-hover/title:text-sage-300 transition-colors">
+                  {exercise.name}
+                </h3>
+                <svg
+                  viewBox="0 0 24 24"
+                  className={cn(
+                    "w-3.5 h-3.5 text-sage-300 shrink-0 transition-transform",
+                    showGif && "rotate-180",
+                  )}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+            ) : (
+              <h3 className="text-sm text-bone-50 leading-snug">
+                {exercise.name}
+              </h3>
+            )}
             <p className="text-[11px] font-mono text-bone-400 tabular mt-0.5">
               {exercise.sets}
               {exercise.load && ` · ${exercise.load}`}
@@ -60,6 +91,20 @@ export function ExerciseLogger({ exercise, day, ordinal }: Props) {
           </p>
         )}
       </header>
+
+      {/* Animación del ejercicio (free-exercise-db, dominio público) */}
+      {gif && showGif && (
+        <div className="border-t border-ink-800 bg-[#f4f1ea] animate-fade-up">
+          <ExerciseAnimation
+            images={gif.images}
+            alt={exercise.name}
+            className="w-full max-w-[280px] mx-auto"
+          />
+          <p className="text-center text-[10px] font-mono text-ink-600 pb-2">
+            {gif.ref} · demostración
+          </p>
+        </div>
+      )}
 
       {/* Sets registrados */}
       {sets.length > 0 && (

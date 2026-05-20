@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "protocolo-shopping";
 
-export function ShoppingList() {
+export function ShoppingList({ embedded = false }: { embedded?: boolean }) {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [hydrated, setHydrated] = useState(false);
   const [variant, setVariant] = useState(0);
@@ -51,22 +51,28 @@ export function ShoppingList() {
     ? Object.values(checked).filter(Boolean).length
     : 0;
 
-  return (
-    <Card as="section">
-      <div className="flex items-start justify-between mb-1">
-        <div>
-          <p className="eyebrow text-sage-300">Lista de la compra</p>
-          <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
-            Ingredientes de la semana
-          </h2>
-          <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mt-1.5">
-            {WEEK_VARIANT_LABELS[variant]}
-          </p>
+  const body = (
+    <>
+      {embedded ? (
+        <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mb-3">
+          {WEEK_VARIANT_LABELS[variant]}
+        </p>
+      ) : (
+        <div className="flex items-start justify-between mb-1">
+          <div>
+            <p className="eyebrow text-sage-300">Lista de la compra</p>
+            <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
+              Ingredientes de la semana
+            </h2>
+            <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mt-1.5">
+              {WEEK_VARIANT_LABELS[variant]}
+            </p>
+          </div>
+          <span className="numeral text-4xl text-ink-700" aria-hidden>
+            {String(total).padStart(2, "0")}
+          </span>
         </div>
-        <span className="numeral text-4xl text-ink-700" aria-hidden>
-          {String(total).padStart(2, "0")}
-        </span>
-      </div>
+      )}
 
       <div className="flex items-center justify-between mb-4">
         <p className="font-mono text-[11px] text-bone-400 tabular">
@@ -123,6 +129,9 @@ export function ShoppingList() {
           </div>
         ))}
       </div>
-    </Card>
+    </>
   );
+
+  if (embedded) return body;
+  return <Card as="section">{body}</Card>;
 }

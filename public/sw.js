@@ -8,7 +8,7 @@
  * Subir CACHE_VERSION fuerza invalidación tras un deploy.
  */
 
-const CACHE_VERSION = "protocolo-v2";
+const CACHE_VERSION = "protocolo-v3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -78,6 +78,27 @@ self.addEventListener("fetch", (event) => {
   } catch (_) {
     return;
   }
+
+  // Imágenes de ejercicios (free-exercise-db en GitHub raw): cache-first,
+  // para que funcionen offline tras la primera carga con conexión.
+  if (url.hostname === "raw.githubusercontent.com") {
+    event.respondWith(
+      (async () => {
+        const cache = await caches.open(RUNTIME_CACHE);
+        const cached = await cache.match(request);
+        if (cached) return cached;
+        try {
+          const fresh = await fetch(request);
+          if (fresh && fresh.ok) cache.put(request, fresh.clone());
+          return fresh;
+        } catch (_) {
+          return new Response("", { status: 504 });
+        }
+      })(),
+    );
+    return;
+  }
+
   if (url.origin !== self.location.origin) return;
 
   // Navegación HTML → network-first con fallback robusto al app shell.
