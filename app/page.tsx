@@ -1,0 +1,26 @@
+import { PageHeader } from "@/components/layout/PageHeader";
+import { TodayFocus } from "@/components/dashboard/TodayFocus";
+import { WeekOverview } from "@/components/dashboard/WeekOverview";
+import { MorningTimeline } from "@/components/dashboard/MorningTimeline";
+import { DietToday } from "@/components/dashboard/DietToday";
+import { HowItWorks } from "@/components/dashboard/HowItWorks";
+
+export default function HomePage() {
+  return (
+    <>
+      <PageHeader
+        eyebrow="Protocolo"
+        title="Hoy"
+        subtitle="Tu plan del día: foco de entrenamiento, deporte, dieta y recuperación."
+        numeral="—"
+      />
+      <TodayFocus />
+      <WeekOverview />
+      <HowItWorks />
+      <div className="rule mx-5 my-2" aria-hidden />
+      <DietToday />
+      <div className="rule mx-5 my-2" aria-hidden />
+      <MorningTimeline />
+    </>
+  );
+}
