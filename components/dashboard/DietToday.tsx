@@ -2,20 +2,35 @@
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { ActivitySelector } from "@/components/dashboard/ActivitySelector";
 import {
   PRE_WORKOUT,
   POST_WORKOUT,
-  WEEK_DIET,
+  getWeekDiet,
+  getActivityFuel,
+  WEEK_VARIANT_LABELS,
+  weekOfMonthIndex,
   DIET_DISCLAIMER,
 } from "@/lib/data/diet";
-import { currentWeekDay } from "@/lib/utils";
+import { currentWeekDay, toISODate } from "@/lib/utils";
+import { useProtocolStore } from "@/lib/store";
 import type { Meal, WeekDay } from "@/lib/types";
 
 export function DietToday() {
   const [today, setToday] = useState<WeekDay | null>(null);
-  useEffect(() => setToday(currentWeekDay()), []);
+  const [iso, setIso] = useState<string>("");
+  const [variant, setVariant] = useState(0);
 
-  if (!today) {
+  useEffect(() => {
+    const now = new Date();
+    setToday(currentWeekDay(now));
+    setIso(toISODate(now));
+    setVariant(weekOfMonthIndex(now));
+  }, []);
+
+  const activity = useProtocolStore((s) => (iso ? s.activities[iso] : "none"));
+
+  if (!today || !iso) {
     return (
       <Card className="mx-5">
         <p className="text-bone-400 text-sm">Cargando dieta…</p>
@@ -23,16 +38,40 @@ export function DietToday() {
     );
   }
 
-  const meals: Meal[] = [PRE_WORKOUT, POST_WORKOUT, ...WEEK_DIET[today]];
+  const meals: Meal[] = [PRE_WORKOUT, POST_WORKOUT, ...getWeekDiet()[today]];
+  const fuel = getActivityFuel(activity ?? "none");
 
   return (
     <section className="px-5 py-2">
-      <div className="flex items-baseline justify-between mb-4">
+      <div className="flex items-baseline justify-between mb-1">
         <p className="eyebrow text-bone-300">Dieta de hoy · 5 comidas + batidos</p>
         <span className="font-mono text-[10px] text-bone-400">
           {meals.length} tomas
         </span>
       </div>
+      <p className="font-mono text-[10px] tracking-widest uppercase text-sage-300 mb-3">
+        {WEEK_VARIANT_LABELS[variant]}
+      </p>
+
+      {/* Selector de actividad del día */}
+      <Card className="p-4 mb-3">
+        <ActivitySelector date={iso} />
+        {fuel && (
+          <div className="mt-3 space-y-1.5 animate-fade-up">
+            <p className="text-[12px] text-bone-200 leading-snug">
+              <span className="text-terra-300 font-medium">Antes · </span>
+              {fuel.pre}
+            </p>
+            <p className="text-[12px] text-bone-200 leading-snug">
+              <span className="text-sage-300 font-medium">Después · </span>
+              {fuel.post}
+            </p>
+            <p className="text-[11px] text-bone-400 italic leading-snug pt-0.5">
+              {fuel.note}
+            </p>
+          </div>
+        )}
+      </Card>
 
       <ol className="space-y-2.5">
         {meals.map((meal, i) => (
@@ -106,15 +145,7 @@ function MealRow({ meal }: { meal: Meal }) {
 
 function ShakeIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="w-[18px] h-[18px]"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="M7 8h10l-1 11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2L7 8z" />
       <path d="M7.5 8 9 3h6l1.5 5" />
       <path d="M8 12h8" />
@@ -124,15 +155,7 @@ function ShakeIcon() {
 
 function PlateIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="w-[18px] h-[18px]"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="8" />
       <circle cx="12" cy="12" r="3.5" />
     </svg>

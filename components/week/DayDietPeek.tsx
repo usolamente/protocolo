@@ -1,15 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { WEEK_DIET, PRE_WORKOUT, POST_WORKOUT } from "@/lib/data/diet";
+import { useEffect, useState } from "react";
+import { getWeekDiet, PRE_WORKOUT, POST_WORKOUT } from "@/lib/data/diet";
+import { currentWeekDates } from "@/lib/utils";
+import { ActivitySelector } from "@/components/dashboard/ActivitySelector";
 import type { WeekDay } from "@/lib/types";
 
 export function DayDietPeek({ day }: { day: WeekDay }) {
   const [open, setOpen] = useState(false);
-  const meals = [PRE_WORKOUT, POST_WORKOUT, ...WEEK_DIET[day]];
+  const [iso, setIso] = useState<string>("");
+
+  useEffect(() => {
+    setIso(currentWeekDates()[day]);
+  }, [day]);
+
+  const meals = [PRE_WORKOUT, POST_WORKOUT, ...getWeekDiet()[day]];
 
   return (
     <div className="mt-4 border-t border-ink-800 pt-3">
+      {/* Selector de actividad del día — siempre visible */}
+      {iso && (
+        <div className="mb-3">
+          <ActivitySelector date={iso} />
+        </div>
+      )}
+
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between"

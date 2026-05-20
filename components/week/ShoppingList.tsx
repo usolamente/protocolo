@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
-import { WEEKLY_SHOPPING } from "@/lib/data/diet";
+import { getWeeklyShopping, WEEK_VARIANT_LABELS, weekOfMonthIndex } from "@/lib/data/diet";
 import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "protocolo-shopping";
@@ -10,8 +10,10 @@ const STORAGE_KEY = "protocolo-shopping";
 export function ShoppingList() {
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [hydrated, setHydrated] = useState(false);
+  const [variant, setVariant] = useState(0);
 
   useEffect(() => {
+    setVariant(weekOfMonthIndex());
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) setChecked(JSON.parse(raw));
@@ -20,6 +22,8 @@ export function ShoppingList() {
     }
     setHydrated(true);
   }, []);
+
+  const shopping = getWeeklyShopping();
 
   const toggle = (key: string) => {
     setChecked((prev) => {
@@ -42,7 +46,7 @@ export function ShoppingList() {
     }
   };
 
-  const total = WEEKLY_SHOPPING.reduce((n, c) => n + c.items.length, 0);
+  const total = shopping.reduce((n, c) => n + c.items.length, 0);
   const done = hydrated
     ? Object.values(checked).filter(Boolean).length
     : 0;
@@ -55,6 +59,9 @@ export function ShoppingList() {
           <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
             Ingredientes de la semana
           </h2>
+          <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mt-1.5">
+            {WEEK_VARIANT_LABELS[variant]}
+          </p>
         </div>
         <span className="numeral text-4xl text-ink-700" aria-hidden>
           {String(total).padStart(2, "0")}
@@ -76,7 +83,7 @@ export function ShoppingList() {
       </div>
 
       <div className="space-y-5">
-        {WEEKLY_SHOPPING.map((cat) => (
+        {shopping.map((cat) => (
           <div key={cat.category}>
             <p className="font-mono text-[11px] tracking-widest uppercase text-bone-300 mb-2">
               {cat.category}

@@ -10,6 +10,7 @@ import type {
   LoggedExercise,
   LoggedSet,
   WeekDay,
+  Activity,
 } from "./types";
 import { toISODate } from "./utils";
 
@@ -44,6 +45,15 @@ interface ProtocolState {
   journal: JournalEntry[];
   saveJournal: (entry: Omit<JournalEntry, "date">) => void;
   getTodayJournal: () => JournalEntry | undefined;
+
+  // ACTIVIDADES COMPLEMENTARIAS (por fecha ISO)
+  activities: Record<string, Activity>;
+  setActivity: (date: string, activity: Activity) => void;
+  getActivity: (date: string) => Activity;
+
+  // DATOS · exportar / importar
+  exportData: () => string;
+  importData: (json: string) => boolean;
 }
 
 export const useProtocolStore = create<ProtocolState>()(
@@ -179,6 +189,62 @@ export const useProtocolStore = create<ProtocolState>()(
       getTodayJournal: () => {
         const date = toISODate();
         return get().journal.find((e) => e.date === date);
+      },
+
+      // ── Actividades complementarias ────────────────────
+      activities: {},
+
+      setActivity: (date, activity) =>
+        set((state) => {
+          const next = { ...state.activities };
+          if (activity === "none") {
+            delete next[date];
+          } else {
+            next[date] = activity;
+          }
+          return { activities: next };
+        }),
+
+      getActivity: (date) => get().activities[date] ?? "none",
+
+      // ── Exportar / importar ────────────────────────────
+      exportData: () => {
+        const s = get();
+        const payload = {
+          app: "protocolo",
+          version: 1,
+          exportedAt: new Date().toISOString(),
+          data: {
+            challenge: s.challenge,
+            challengeStartDate: s.challengeStartDate,
+            spartanCompletedSessions: s.spartanCompletedSessions,
+            log: s.log,
+            journal: s.journal,
+            activities: s.activities,
+          },
+        };
+        return JSON.stringify(payload, null, 2);
+      },
+
+      importData: (json) => {
+        try {
+          const parsed = JSON.parse(json);
+          const d = parsed?.data ?? parsed;
+          if (typeof d !== "object" || d === null) return false;
+          set((state) => ({
+            challenge: d.challenge ?? state.challenge,
+            challengeStartDate:
+              d.challengeStartDate ?? state.challengeStartDate,
+            spartanCompletedSessions:
+              d.spartanCompletedSessions ?? state.spartanCompletedSessions,
+            log: Array.isArray(d.log) ? d.log : state.log,
+            journal: Array.isArray(d.journal) ? d.journal : state.journal,
+            activities: d.activities ?? state.activities,
+          }));
+          return true;
+        } catch {
+          return false;
+        }
       },
     }),
     {

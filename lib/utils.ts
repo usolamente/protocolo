@@ -1,4 +1,4 @@
-import type { WeekDay } from "./types";
+import type { WeekDay, Activity } from "./types";
 
 /** Combinador clsx-style mínimo, sin dependencias. */
 export function cn(...parts: Array<string | false | null | undefined>): string {
@@ -68,4 +68,35 @@ export function formatTime(totalSeconds: number): string {
 /** Padding numérico bonito para tipografía editorial. */
 export function num(n: number, width = 2): string {
   return String(n).padStart(width, "0");
+}
+
+/** Catálogo de actividades complementarias. */
+export const ACTIVITIES: { value: Activity; label: string; emoji: string }[] = [
+  { value: "none", label: "Sin actividad", emoji: "—" },
+  { value: "correr", label: "Correr", emoji: "🏃" },
+  { value: "futbol", label: "Fútbol", emoji: "⚽" },
+  { value: "basket", label: "Básket", emoji: "🏀" },
+  { value: "escalar", label: "Escalar", emoji: "🧗" },
+  { value: "varios", label: "Deportes varios", emoji: "🤸" },
+];
+
+export const ACTIVITY_META: Record<Activity, { label: string; emoji: string }> =
+  Object.fromEntries(
+    ACTIVITIES.map((a) => [a.value, { label: a.label, emoji: a.emoji }]),
+  ) as Record<Activity, { label: string; emoji: string }>;
+
+/** Mapea cada día de la semana actual (lunes-domingo) a su fecha ISO. */
+export function currentWeekDates(ref = new Date()): Record<WeekDay, string> {
+  const d = new Date(ref);
+  // getDay(): 0=domingo … 6=sábado. Queremos lunes como inicio.
+  const dow = (d.getDay() + 6) % 7; // 0=lunes … 6=domingo
+  const monday = new Date(d);
+  monday.setDate(d.getDate() - dow);
+  const result = {} as Record<WeekDay, string>;
+  WEEK_DAYS.forEach((day, i) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + i);
+    result[day] = toISODate(date);
+  });
+  return result;
 }

@@ -1,13 +1,14 @@
 /* Protocolo · Service Worker
  * Estrategia:
- *  - HTML / navegación → network-first (fallback a cache si no hay red)
- *  - Estáticos (JS/CSS/fuentes/imágenes) → cache-first con revalidación
- *  - Pre-cache de las 6 rutas raíz en install
+ *  - Navegación HTML → network-first, con fallback a la página cacheada y,
+ *    en última instancia, a la raíz "/" (app shell).
+ *  - Estáticos (_next/static, iconos, imágenes) → stale-while-revalidate.
+ *  - Precache tolerante a fallos de las rutas raíz.
  *
- * Subir CACHE_VERSION para forzar invalidación tras un deploy.
+ * Subir CACHE_VERSION fuerza invalidación tras un deploy.
  */
 
-const CACHE_VERSION = "protocolo-v1";
+const CACHE_VERSION = "protocolo-v2";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -26,80 +27,112 @@ const PRECACHE_ROUTES = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) =>
-        Promise.allSettled(PRECACHE_ROUTES.map((url) => cache.add(url))),
-      )
-      .then(() => self.skipWaiting()),
+    (async () => {
+      const cache = await caches.open(STATIC_CACHE);
+      // add() individual y tolerante: si una ruta falla, no rompe el resto.
+      await Promise.allSettled(
+        PRECACHE_ROUTES.map(async (url) => {
+          try {
+            await cache.add(new Request(url, { cache: "reload" }));
+          } catch (_) {
+            /* ignora la ruta que falle */
+          }
+        }),
+      );
+      await self.skipWaiting();
+    })(),
   );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys
-            .filter((k) => !k.startsWith(CACHE_VERSION))
-            .map((k) => caches.delete(k)),
-        ),
-      )
-      .then(() => self.clients.claim()),
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
+        keys
+          .filter((k) => !k.startsWith(CACHE_VERSION))
+          .map((k) => caches.delete(k)),
+      );
+      await self.clients.claim();
+    })(),
   );
 });
 
 const isStaticAsset = (url) => {
   const path = url.pathname;
   return (
-    path.startsWith("/_next/static/") ||
+    path.startsWith("/_next/") ||
     path.startsWith("/icons/") ||
-    /\.(?:css|js|woff2?|ttf|png|jpg|jpeg|svg|webp|ico)$/i.test(path)
+    path.startsWith("/spartan/") ||
+    /\.(?:css|js|woff2?|ttf|png|jpg|jpeg|svg|webp|ico|json)$/i.test(path)
   );
 };
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
-
-  // Solo cacheamos GET mismo-origen
   if (request.method !== "GET") return;
-  const url = new URL(request.url);
+
+  let url;
+  try {
+    url = new URL(request.url);
+  } catch (_) {
+    return;
+  }
   if (url.origin !== self.location.origin) return;
 
-  // Navegación HTML → network-first
-  if (request.mode === "navigate") {
+  // Navegación HTML → network-first con fallback robusto al app shell.
+  if (
+    request.mode === "navigate" ||
+    (request.headers.get("accept") || "").includes("text/html")
+  ) {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
-          return response;
-        })
-        .catch(() =>
-          caches.match(request).then((cached) => cached || caches.match("/")),
-        ),
+      (async () => {
+        try {
+          const fresh = await fetch(request);
+          const cache = await caches.open(RUNTIME_CACHE);
+          cache.put(request, fresh.clone());
+          return fresh;
+        } catch (_) {
+          const cache = await caches.open(RUNTIME_CACHE);
+          // 1) intenta la misma ruta cacheada
+          const cached = await cache.match(request);
+          if (cached) return cached;
+          // 2) intenta la ruta en el cache estático (precache)
+          const staticCache = await caches.open(STATIC_CACHE);
+          const pre =
+            (await staticCache.match(url.pathname)) ||
+            (await staticCache.match(request));
+          if (pre) return pre;
+          // 3) último recurso: app shell "/"
+          const shell =
+            (await staticCache.match("/")) || (await cache.match("/"));
+          if (shell) return shell;
+          return new Response(
+            "<h1>Sin conexión</h1><p>Abre la app con conexión al menos una vez.</p>",
+            { headers: { "Content-Type": "text/html; charset=utf-8" } },
+          );
+        }
+      })(),
     );
     return;
   }
 
-  // Assets estáticos → cache-first con stale-while-revalidate
+  // Estáticos → stale-while-revalidate.
   if (isStaticAsset(url)) {
     event.respondWith(
-      caches.match(request).then((cached) => {
+      (async () => {
+        const cache = await caches.open(STATIC_CACHE);
+        const cached = await cache.match(request);
         const fetchPromise = fetch(request)
           .then((response) => {
-            if (response.ok) {
-              const copy = response.clone();
-              caches
-                .open(STATIC_CACHE)
-                .then((cache) => cache.put(request, copy));
+            if (response && response.ok) {
+              cache.put(request, response.clone());
             }
             return response;
           })
           .catch(() => cached);
         return cached || fetchPromise;
-      }),
+      })(),
     );
   }
 });

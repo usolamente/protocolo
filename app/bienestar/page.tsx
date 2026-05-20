@@ -4,6 +4,7 @@ import { ModuleRole } from "@/components/layout/ModuleRole";
 import { BreathingTimer } from "@/components/wellness/BreathingTimer";
 import { StoicJournal } from "@/components/wellness/StoicJournal";
 import { ThermalTimer } from "@/components/wellness/ThermalTimer";
+import { DataManager } from "@/components/wellness/DataManager";
 
 export default function BienestarPage() {
   return (
@@ -79,6 +80,8 @@ export default function BienestarPage() {
             />
           </div>
         </Card>
+
+        <DataManager />
       </div>
     </>
   );

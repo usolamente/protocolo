@@ -153,3 +153,15 @@ export interface ShoppingCategory {
   category: string;
   items: { name: string; qty: string }[];
 }
+
+// ─────────────────────────────────────────────────────────
+// Actividad complementaria (registrada por día)
+// ─────────────────────────────────────────────────────────
+
+export type Activity =
+  | "none"
+  | "correr"
+  | "futbol"
+  | "basket"
+  | "escalar"
+  | "varios";
