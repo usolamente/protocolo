@@ -11,6 +11,7 @@ import type {
   LoggedSet,
   WeekDay,
   Activity,
+  UserConfig,
 } from "./types";
 import { toISODate } from "./utils";
 
@@ -54,6 +55,19 @@ interface ProtocolState {
   // DATOS · exportar / importar
   exportData: () => string;
   importData: (json: string) => boolean;
+
+  // CONFIGURACIÓN (pantalla de bienvenida)
+  config: UserConfig;
+  setConfig: (patch: Partial<UserConfig>) => void;
+  completeOnboarding: (config: Omit<UserConfig, "configured">) => void;
+  resetOnboarding: () => void;
+  toggleVerbosity: () => void;
+
+  // RUTINAS OCULTAS (según modo de adherencia)
+  hiddenItems: Record<string, true>; // claves "tipo:id"
+  toggleHidden: (key: string) => void;
+  isHidden: (key: string) => boolean;
+  clearHidden: () => void;
 }
 
 export const useProtocolStore = create<ProtocolState>()(
@@ -221,6 +235,8 @@ export const useProtocolStore = create<ProtocolState>()(
             log: s.log,
             journal: s.journal,
             activities: s.activities,
+            config: s.config,
+            hiddenItems: s.hiddenItems,
           },
         };
         return JSON.stringify(payload, null, 2);
@@ -240,12 +256,59 @@ export const useProtocolStore = create<ProtocolState>()(
             log: Array.isArray(d.log) ? d.log : state.log,
             journal: Array.isArray(d.journal) ? d.journal : state.journal,
             activities: d.activities ?? state.activities,
+            config: d.config ?? state.config,
+            hiddenItems: d.hiddenItems ?? state.hiddenItems,
           }));
           return true;
         } catch {
           return false;
         }
       },
+
+      // ── Configuración / bienvenida ─────────────────────
+      config: {
+        configured: false,
+        language: "cast",
+        somatotype: "mesomorfo",
+        adherence: "disciplina",
+        verbosity: "verbose",
+      },
+
+      setConfig: (patch) =>
+        set((state) => ({ config: { ...state.config, ...patch } })),
+
+      completeOnboarding: (cfg) =>
+        set(() => ({ config: { ...cfg, configured: true } })),
+
+      resetOnboarding: () =>
+        set((state) => ({ config: { ...state.config, configured: false } })),
+
+      toggleVerbosity: () =>
+        set((state) => ({
+          config: {
+            ...state.config,
+            verbosity:
+              state.config.verbosity === "verbose" ? "synthetic" : "verbose",
+          },
+        })),
+
+      // ── Rutinas ocultas (adherencia) ───────────────────
+      hiddenItems: {},
+
+      toggleHidden: (key) =>
+        set((state) => {
+          const next = { ...state.hiddenItems };
+          if (next[key]) {
+            delete next[key];
+          } else {
+            next[key] = true;
+          }
+          return { hiddenItems: next };
+        }),
+
+      isHidden: (key) => !!get().hiddenItems[key],
+
+      clearHidden: () => set(() => ({ hiddenItems: {} })),
     }),
     {
       name: "protocolo-store",

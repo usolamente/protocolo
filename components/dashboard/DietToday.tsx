@@ -14,6 +14,7 @@ import {
 } from "@/lib/data/diet";
 import { currentWeekDay, toISODate } from "@/lib/utils";
 import { useProtocolStore } from "@/lib/store";
+import { SOMATOTYPE_MAP } from "@/lib/data/config";
 import type { Meal, WeekDay } from "@/lib/types";
 
 export function DietToday() {
@@ -29,6 +30,8 @@ export function DietToday() {
   }, []);
 
   const activity = useProtocolStore((s) => (iso ? s.activities[iso] : "none"));
+  const somatotype = useProtocolStore((s) => s.config.somatotype);
+  const soma = SOMATOTYPE_MAP[somatotype];
 
   if (!today || !iso) {
     return (
@@ -52,6 +55,16 @@ export function DietToday() {
       <p className="font-mono text-[10px] tracking-widest uppercase text-sage-300 mb-3">
         {WEEK_VARIANT_LABELS[variant]}
       </p>
+
+      {/* Ajuste por somatotipo */}
+      <Card className="p-4 mb-3 border-sage-300/30 bg-sage-900/20">
+        <p className="font-mono text-[10px] tracking-widest uppercase text-sage-300">
+          {soma.label} · carbohidrato {soma.carbBias}
+        </p>
+        <p className="text-[12px] text-bone-200 leading-snug mt-1.5">
+          {soma.dietNote}
+        </p>
+      </Card>
 
       {/* Selector de actividad del día */}
       <Card className="p-4 mb-3">

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
+import { useProtocolStore } from "@/lib/store";
 
 const MODULES = [
   {
@@ -33,6 +34,8 @@ const MODULES = [
 
 export function HowItWorks() {
   const [open, setOpen] = useState(false);
+  const verbosity = useProtocolStore((s) => s.config.verbosity);
+  if (verbosity === "synthetic") return null;
 
   return (
     <section className="px-5 py-2">

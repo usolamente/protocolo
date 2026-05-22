@@ -90,6 +90,7 @@ export default function HipertrofiaPage() {
               exercise={ex}
               day={plan.day}
               ordinal={i + 1}
+              groupKeys={plan.exercises.map((e) => `pesas:${e.id}`)}
             />
           ))}
         </div>

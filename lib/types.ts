@@ -165,3 +165,38 @@ export type Activity =
   | "basket"
   | "escalar"
   | "varios";
+
+// ─────────────────────────────────────────────────────────
+// Configuración del usuario (pantalla de bienvenida)
+// ─────────────────────────────────────────────────────────
+
+/** Idioma de la interfaz. (Traducciones reales en una fase posterior.) */
+export type Language = "cat" | "cast" | "eng";
+
+/**
+ * Somatotipo (clasificación de Sheldon), reducido a tres perfiles que
+ * ajustan dieta y entrenamiento:
+ *  - ectomorfo: metabolismo rápido, le cuesta ganar → más carbohidrato/calorías.
+ *  - mesomorfo: equilibrado → plan base.
+ *  - endomorfo: tiende a acumular grasa → control de carbohidrato, más cardio.
+ */
+export type Somatotype = "ectomorfo" | "mesomorfo" | "endomorfo";
+
+/**
+ * Modo de adherencia:
+ *  - disciplina: todo a rajatabla (app completa, sin ocultar nada).
+ *  - equilibrio: puedes ocultar algunas rutinas y saltarte comidas.
+ *  - flujo: ocultas/editas lo que quieras, sin presión.
+ */
+export type Adherence = "disciplina" | "equilibrio" | "flujo";
+
+/** Densidad de explicaciones: verboso (guiado) o sintético (directo). */
+export type Verbosity = "verbose" | "synthetic";
+
+export interface UserConfig {
+  configured: boolean;
+  language: Language;
+  somatotype: Somatotype;
+  adherence: Adherence;
+  verbosity: Verbosity;
+}

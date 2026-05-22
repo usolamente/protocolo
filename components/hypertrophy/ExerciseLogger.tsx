@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useProtocolStore } from "@/lib/store";
 import { getExerciseGif } from "@/lib/data/exerciseGifs";
 import { ExerciseAnimation } from "@/components/hypertrophy/ExerciseAnimation";
+import { HideToggle } from "@/components/system/HideToggle";
 import type { ExerciseSpec, WeekDay } from "@/lib/types";
 import { cn, num } from "@/lib/utils";
 
@@ -11,14 +12,17 @@ interface Props {
   exercise: ExerciseSpec;
   day: WeekDay;
   ordinal: number;
+  groupKeys?: string[];
 }
 
-export function ExerciseLogger({ exercise, day, ordinal }: Props) {
+export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props) {
   const log = useProtocolStore((s) => s.getTodayLog());
   const logSet = useProtocolStore((s) => s.logSet);
   const removeLast = useProtocolStore((s) => s.removeLastSet);
   const gif = getExerciseGif(exercise.id);
   const [showGif, setShowGif] = useState(false);
+  const hideKey = `pesas:${exercise.id}`;
+  const hidden = useProtocolStore((s) => !!s.hiddenItems[hideKey]);
 
   const loggedExercise = log?.exercises.find((e) => e.id === exercise.id);
   const sets = loggedExercise?.sets ?? [];
@@ -37,6 +41,21 @@ export function ExerciseLogger({ exercise, day, ordinal }: Props) {
     if (isNaN(w) || w < 0) return;
     logSet(day, exercise.id, exercise.name, { reps: r, weight: w });
   };
+
+  // Estado oculto (modos equilibrio/flujo): fila mínima con opción de mostrar.
+  if (hidden) {
+    return (
+      <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-dashed border-ink-700 bg-ink-900/20">
+        <span className="numeral text-sm text-bone-400 tabular w-5">
+          {num(ordinal)}
+        </span>
+        <span className="flex-1 text-sm text-bone-400 line-through truncate">
+          {exercise.name}
+        </span>
+        <HideToggle itemKey={hideKey} groupKeys={groupKeys} />
+      </div>
+    );
+  }
 
   return (
     <article className="border border-ink-800 rounded-sm overflow-hidden">
@@ -84,6 +103,7 @@ export function ExerciseLogger({ exercise, day, ordinal }: Props) {
               {sets.length} ●
             </span>
           )}
+          <HideToggle itemKey={hideKey} groupKeys={groupKeys} />
         </div>
         {exercise.note && (
           <p className="text-[11px] text-bone-400 italic mt-1.5 leading-snug pl-8">

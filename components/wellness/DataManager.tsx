@@ -4,10 +4,13 @@ import { useRef, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { useProtocolStore } from "@/lib/store";
 import { toISODate } from "@/lib/utils";
+import { SOMATOTYPE_MAP, ADHERENCE_MAP, LANGUAGES } from "@/lib/data/config";
 
 export function DataManager() {
   const exportData = useProtocolStore((s) => s.exportData);
   const importData = useProtocolStore((s) => s.importData);
+  const config = useProtocolStore((s) => s.config);
+  const resetOnboarding = useProtocolStore((s) => s.resetOnboarding);
   const fileRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<{
     kind: "ok" | "error";
@@ -54,7 +57,49 @@ export function DataManager() {
   };
 
   return (
-    <Card as="section">
+    <>
+      <Card as="section">
+        <p className="eyebrow text-sage-300">Tu configuración</p>
+        <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
+          Cómo está la app
+        </h2>
+
+        <dl className="mt-4 space-y-2.5">
+          <ConfigRow
+            label="Idioma"
+            value={LANGUAGES.find((l) => l.value === config.language)?.native ?? "—"}
+          />
+          <ConfigRow
+            label="Somatotipo"
+            value={SOMATOTYPE_MAP[config.somatotype].label}
+          />
+          <ConfigRow
+            label="Modo"
+            value={ADHERENCE_MAP[config.adherence].label}
+          />
+          <ConfigRow
+            label="Explicaciones"
+            value={config.verbosity === "verbose" ? "Guiado" : "Directo"}
+          />
+        </dl>
+
+        <button
+          onClick={() => {
+            if (
+              confirm(
+                "¿Volver a la pantalla de bienvenida para reconfigurar? Tu progreso no se borra.",
+              )
+            ) {
+              resetOnboarding();
+            }
+          }}
+          className="btn btn-secondary w-full mt-4"
+        >
+          Reconfigurar
+        </button>
+      </Card>
+
+      <Card as="section" className="mt-5">
       <p className="eyebrow text-sage-300">Tus datos</p>
       <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
         Copia de seguridad
@@ -97,5 +142,17 @@ export function DataManager() {
         Importar sustituye el progreso actual por el del archivo.
       </p>
     </Card>
+    </>
+  );
+}
+
+function ConfigRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <dt className="font-mono text-[11px] tracking-widest uppercase text-bone-400">
+        {label}
+      </dt>
+      <dd className="text-sm text-bone-100">{value}</dd>
+    </div>
   );
 }

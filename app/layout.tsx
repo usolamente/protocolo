@@ -3,6 +3,7 @@ import { Fraunces, JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { ServiceWorkerRegister } from "@/components/system/ServiceWorkerRegister";
+import { OnboardingGate } from "@/components/onboarding/OnboardingGate";
 
 const display = Fraunces({
   subsets: ["latin"],
@@ -106,6 +107,7 @@ export default function RootLayout({
         <main className="mx-auto max-w-md safe-area-bottom">{children}</main>
         <BottomNav />
         <ServiceWorkerRegister />
+        <OnboardingGate />
       </body>
     </html>
   );

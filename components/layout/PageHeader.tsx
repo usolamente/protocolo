@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/system/ThemeToggle";
+import { VerbosityToggle } from "@/components/system/VerbosityToggle";
 
 interface PageHeaderProps {
   eyebrow: string;
@@ -23,13 +24,14 @@ export function PageHeader({
       className={cn("pt-10 pb-6 px-5 border-b border-ink-800 relative", className)}
     >
       {!hideToggle && (
-        <div className="absolute right-4 top-8 z-10">
+        <div className="absolute right-4 top-8 z-10 flex items-center gap-2">
+          <VerbosityToggle />
           <ThemeToggle />
         </div>
       )}
       {numeral && (
         <span
-          className="absolute right-16 top-7 numeral text-7xl text-ink-800 select-none pointer-events-none"
+          className="absolute right-28 top-7 numeral text-7xl text-ink-800 select-none pointer-events-none"
           aria-hidden
         >
           {numeral}

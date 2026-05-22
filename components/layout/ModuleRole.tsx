@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useProtocolStore } from "@/lib/store";
 import type { ReactNode } from "react";
 
 type Accent = "sage" | "terra" | "clay";
@@ -44,6 +47,8 @@ export function ModuleRole({
   children?: ReactNode;
 }) {
   const a = ACCENT[accent];
+  const verbosity = useProtocolStore((s) => s.config.verbosity);
+  if (verbosity === "synthetic") return null;
   return (
     <div className={cn("rounded-xl border p-4", a.ring, a.bg)}>
       <div className="flex items-center gap-2">
