@@ -10,7 +10,7 @@ const NAV = [
   { href: "/reto", label: "Reto", icon: GridIcon },
   { href: "/spartan", label: "Spartan", icon: BoltIcon },
   { href: "/hipertrofia", label: "Pesas", icon: BarbellIcon },
-  { href: "/bienestar", label: "Mente", icon: LotusIcon },
+  { href: "/bienestar", label: "Cuidado", icon: LotusIcon },
 ];
 
 export function BottomNav() {

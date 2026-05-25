@@ -8,7 +8,7 @@
  * Subir CACHE_VERSION fuerza invalidación tras un deploy.
  */
 
-const CACHE_VERSION = "protocolo-v4";
+const CACHE_VERSION = "protocolo-v7";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 

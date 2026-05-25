@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { ActivitySelector } from "@/components/dashboard/ActivitySelector";
+import { MealTags } from "@/components/dashboard/MealTags";
 import {
   PRE_WORKOUT,
   POST_WORKOUT,
@@ -149,6 +150,8 @@ function MealRow({ meal }: { meal: Meal }) {
                 {meal.note}
               </p>
             )}
+
+            {!isShake && <MealTags items={meal.items} />}
           </div>
         </div>
       </Card>

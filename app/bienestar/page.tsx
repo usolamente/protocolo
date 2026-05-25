@@ -4,23 +4,24 @@ import { ModuleRole } from "@/components/layout/ModuleRole";
 import { BreathingTimer } from "@/components/wellness/BreathingTimer";
 import { StoicJournal } from "@/components/wellness/StoicJournal";
 import { ThermalTimer } from "@/components/wellness/ThermalTimer";
+import { BackCare } from "@/components/wellness/BackCare";
 import { DataManager } from "@/components/wellness/DataManager";
 
 export default function BienestarPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Mindfulness · Recuperación"
-        title="Bienestar"
-        subtitle="Tono vagal antes del esfuerzo, calor después. Diario para canalizar la atención."
+        eyebrow="Cuerpo · Mente · Recuperación"
+        title="Cuidado"
+        subtitle="Respiración y diario antes del esfuerzo, calor después, y una rutina para cuidar la espalda."
         numeral="∞"
       />
 
       <div className="px-5 py-6 space-y-5">
         <ModuleRole
           accent="sage"
-          role="La rutina matutina y la recuperación"
-          text="Reúne lo que en Hoy aparece como cronología de la mañana: la respiración 3-6 y el diario estoico antes de entrenar, y la termoterapia (sauna y piscina) después. Cierra el círculo de serenidad y recuperación del protocolo."
+          role="Tu espacio de autocuidado"
+          text="Reúne la rutina matutina (respiración 3-6 y diario estoico), la recuperación termal (sauna y piscina) y el cuidado postural de la espalda. Cierra el círculo de serenidad y recuperación del protocolo."
         />
 
         {/* Respiración 3-6 */}
@@ -80,6 +81,8 @@ export default function BienestarPage() {
             />
           </div>
         </Card>
+
+        <BackCare />
 
         <DataManager />
       </div>

@@ -26,9 +26,9 @@ const MODULES = [
   },
   {
     href: "/bienestar",
-    name: "Mente",
+    name: "Cuidado",
     color: "text-sage-200",
-    desc: "La rutina matutina: respiración 3-6, diario estoico y la termoterapia (sauna y piscina). Cierra el círculo de recuperación y serenidad.",
+    desc: "Tu autocuidado: respiración 3-6, diario estoico, termoterapia (sauna y piscina) y una rutina para la espalda. Cierra el círculo de recuperación y serenidad.",
   },
 ];
 

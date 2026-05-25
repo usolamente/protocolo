@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getWeekDiet, PRE_WORKOUT, POST_WORKOUT } from "@/lib/data/diet";
 import { currentWeekDates } from "@/lib/utils";
 import { ActivitySelector } from "@/components/dashboard/ActivitySelector";
+import { MealTags } from "@/components/dashboard/MealTags";
 import type { WeekDay } from "@/lib/types";
 
 export function DayDietPeek({ day }: { day: WeekDay }) {
@@ -66,6 +67,7 @@ export function DayDietPeek({ day }: { day: WeekDay }) {
                 <p className="text-[11px] text-bone-400 leading-snug">
                   {m.items.join(" · ")}
                 </p>
+                {m.kind !== "shake" && <MealTags items={m.items} />}
               </div>
             </li>
           ))}
