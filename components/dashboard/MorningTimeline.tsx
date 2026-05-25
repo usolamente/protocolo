@@ -26,6 +26,7 @@ const KIND_BADGE: Record<string, string> = {
 
 export function MorningTimeline() {
   const [nowMin, setNowMin] = useState<number | null>(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setNowMin(currentMinutes());
@@ -35,21 +36,42 @@ export function MorningTimeline() {
 
   return (
     <div className="px-5 py-6">
-      <div className="flex items-end justify-between mb-5">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-end justify-between mb-5 text-left"
+        aria-expanded={open}
+      >
         <div>
           <p className="eyebrow text-bone-300">Ventana matutina</p>
           <p className="font-display italic text-3xl text-bone-50 leading-none mt-1">
             06:50 <span className="text-bone-400">—</span> 08:30
           </p>
         </div>
-        <p className="text-xs text-bone-400 font-mono">
-          {nowMin !== null
-            ? `${String(Math.floor(nowMin / 60)).padStart(2, "0")}:${String(nowMin % 60).padStart(2, "0")}`
-            : "—"}
-        </p>
-      </div>
+        <span className="flex items-center gap-2">
+          <p className="text-xs text-bone-400 font-mono">
+            {nowMin !== null
+              ? `${String(Math.floor(nowMin / 60)).padStart(2, "0")}:${String(nowMin % 60).padStart(2, "0")}`
+              : "—"}
+          </p>
+          <svg
+            viewBox="0 0 24 24"
+            className={cn(
+              "w-5 h-5 text-bone-400 transition-transform",
+              open && "rotate-180",
+            )}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
+      </button>
 
-      <ol className="relative">
+      {open && (
+      <ol className="relative animate-fade-up">
         {/* Línea vertical */}
         <span
           className="absolute left-[26px] top-0 bottom-0 w-px bg-ink-700"
@@ -103,6 +125,7 @@ export function MorningTimeline() {
           );
         })}
       </ol>
+      )}
     </div>
   );
 }

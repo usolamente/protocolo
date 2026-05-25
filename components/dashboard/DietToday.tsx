@@ -89,7 +89,7 @@ export function DietToday() {
 
       <ol className="space-y-2.5">
         {meals.map((meal, i) => (
-          <MealRow key={`${meal.slot}-${i}`} meal={meal} />
+          <MealRow key={`${meal.slot}-${i}`} meal={meal} iso={iso} />
         ))}
       </ol>
 
@@ -100,11 +100,17 @@ export function DietToday() {
   );
 }
 
-function MealRow({ meal }: { meal: Meal }) {
+function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
   const isShake = meal.kind === "shake";
+  const status = useProtocolStore((s) => s.mealStatus[`${iso}:${meal.slot}`] ?? null);
+  const setMealStatus = useProtocolStore((s) => s.setMealStatus);
   return (
     <li>
-      <Card className="p-4">
+      <Card
+        className={`p-4 transition-opacity ${
+          status === "skipped" ? "opacity-50" : ""
+        }`}
+      >
         <div className="flex items-start gap-3">
           <div
             className={`shrink-0 h-9 w-9 rounded-xl flex items-center justify-center ${
@@ -152,6 +158,33 @@ function MealRow({ meal }: { meal: Meal }) {
             )}
 
             {!isShake && <MealTags items={meal.items} />}
+
+            {!isShake && (
+              <div className="mt-3 flex items-center gap-2">
+                <button
+                  onClick={() => setMealStatus(iso, meal.slot, "done")}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-mono tracking-wide transition-colors ${
+                    status === "done"
+                      ? "border-sage-400 text-sage-300 bg-sage-900/30"
+                      : "border-ink-700 text-bone-400 hover:border-sage-400 hover:text-sage-300"
+                  }`}
+                >
+                  <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7" /></svg>
+                  Hecha
+                </button>
+                <button
+                  onClick={() => setMealStatus(iso, meal.slot, "skipped")}
+                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-mono tracking-wide transition-colors ${
+                    status === "skipped"
+                      ? "border-clay-400 text-clay-400 bg-clay-400/10"
+                      : "border-ink-700 text-bone-400 hover:border-clay-400 hover:text-clay-400"
+                  }`}
+                >
+                  <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
+                  Saltada
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </Card>

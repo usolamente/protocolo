@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/layout/PageHeader";
+import { StreakBanner } from "@/components/dashboard/StreakBanner";
 import { TodayFocus } from "@/components/dashboard/TodayFocus";
 import { WeekOverview } from "@/components/dashboard/WeekOverview";
 import { MorningTimeline } from "@/components/dashboard/MorningTimeline";
@@ -15,6 +16,7 @@ export default function HomePage() {
         subtitle="Tu plan del día: foco de entrenamiento, deporte, dieta y recuperación."
         numeral="—"
       />
+      <StreakBanner />
       <TodayFocus />
       <WeekOverview />
       <HowItWorks />

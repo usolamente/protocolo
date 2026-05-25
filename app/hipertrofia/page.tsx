@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { ModuleRole } from "@/components/layout/ModuleRole";
 import { ExerciseLogger } from "@/components/hypertrophy/ExerciseLogger";
+import { StrengthHistory } from "@/components/hypertrophy/StrengthHistory";
 import { WEEK_PLAN, getDayPlan } from "@/lib/data/weekPlan";
 import {
   cn,
@@ -94,6 +95,8 @@ export default function HipertrofiaPage() {
             />
           ))}
         </div>
+
+        <StrengthHistory />
       </div>
     </>
   );

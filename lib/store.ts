@@ -52,6 +52,15 @@ interface ProtocolState {
   setActivity: (date: string, activity: Activity) => void;
   getActivity: (date: string) => Activity;
 
+  // ESTADO DE COMIDAS (por fecha + slot: "hecha" / "saltada")
+  mealStatus: Record<string, "done" | "skipped">; // clave "YYYY-MM-DD:slot"
+  setMealStatus: (date: string, slot: string, status: "done" | "skipped") => void;
+  getMealStatus: (date: string, slot: string) => "done" | "skipped" | null;
+
+  // RACHA DE ADHERENCIA (derivada)
+  getStreak: () => number;
+  hasActivityOn: (date: string) => boolean;
+
   // DATOS · exportar / importar
   exportData: () => string;
   importData: (json: string) => boolean;
@@ -221,6 +230,71 @@ export const useProtocolStore = create<ProtocolState>()(
 
       getActivity: (date) => get().activities[date] ?? "none",
 
+      // ── Estado de comidas ──────────────────────────────
+      mealStatus: {},
+
+      setMealStatus: (date, slot, status) =>
+        set((state) => {
+          const key = `${date}:${slot}`;
+          const next = { ...state.mealStatus };
+          // Tocar el mismo estado lo desmarca (toggle).
+          if (next[key] === status) {
+            delete next[key];
+          } else {
+            next[key] = status;
+          }
+          return { mealStatus: next };
+        }),
+
+      getMealStatus: (date, slot) =>
+        get().mealStatus[`${date}:${slot}`] ?? null,
+
+      // ── Racha de adherencia ────────────────────────────
+      // Un día "cuenta" si hay registro de pesas, progreso del reto o al
+      // menos una comida marcada como hecha ese día.
+      hasActivityOn: (date) => {
+        const s = get();
+        const hasLog = s.log.some(
+          (e) => e.date === date && e.exercises.length > 0,
+        );
+        const hasChallenge = Object.values(s.challenge).some((day) =>
+          Object.values(day ?? {}).some(Boolean),
+        );
+        const hasMeal = Object.entries(s.mealStatus).some(
+          ([k, v]) => k.startsWith(`${date}:`) && v === "done",
+        );
+        // challenge no guarda fecha por día, así que solo cuenta si hay
+        // progreso global y, además, registro o comida del propio día.
+        return hasLog || hasMeal || (hasChallenge && (hasLog || hasMeal));
+      },
+
+      getStreak: () => {
+        const s = get();
+        // Recorre hacia atrás desde hoy contando días consecutivos con actividad.
+        let streak = 0;
+        const today = new Date();
+        for (let i = 0; i < 400; i++) {
+          const d = new Date(today);
+          d.setDate(today.getDate() - i);
+          const iso = toISODate(d);
+          const hasLog = s.log.some(
+            (e) => e.date === iso && e.exercises.length > 0,
+          );
+          const hasMeal = Object.entries(s.mealStatus).some(
+            ([k, v]) => k.startsWith(`${iso}:`) && v === "done",
+          );
+          if (hasLog || hasMeal) {
+            streak++;
+          } else if (i === 0) {
+            // Hoy aún sin actividad: no rompe la racha previa, sigue contando ayer.
+            continue;
+          } else {
+            break;
+          }
+        }
+        return streak;
+      },
+
       // ── Exportar / importar ────────────────────────────
       exportData: () => {
         const s = get();
@@ -235,6 +309,7 @@ export const useProtocolStore = create<ProtocolState>()(
             log: s.log,
             journal: s.journal,
             activities: s.activities,
+            mealStatus: s.mealStatus,
             config: s.config,
             hiddenItems: s.hiddenItems,
           },
@@ -256,6 +331,7 @@ export const useProtocolStore = create<ProtocolState>()(
             log: Array.isArray(d.log) ? d.log : state.log,
             journal: Array.isArray(d.journal) ? d.journal : state.journal,
             activities: d.activities ?? state.activities,
+            mealStatus: d.mealStatus ?? state.mealStatus,
             config: d.config ?? state.config,
             hiddenItems: d.hiddenItems ?? state.hiddenItems,
           }));
