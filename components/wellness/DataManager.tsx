@@ -5,8 +5,10 @@ import { Card } from "@/components/ui/Card";
 import { useProtocolStore } from "@/lib/store";
 import { toISODate } from "@/lib/utils";
 import { SOMATOTYPE_MAP, ADHERENCE_MAP, LANGUAGES } from "@/lib/data/config";
+import { useT } from "@/lib/i18n/useT";
 
 export function DataManager() {
+  const t = useT();
   const exportData = useProtocolStore((s) => s.exportData);
   const importData = useProtocolStore((s) => s.importData);
   const config = useProtocolStore((s) => s.config);
@@ -29,9 +31,9 @@ export function DataManager() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      setStatus({ kind: "ok", msg: "Copia exportada correctamente." });
+      setStatus({ kind: "ok", msg: t("data.exportOk") });
     } catch {
-      setStatus({ kind: "error", msg: "No se pudo exportar." });
+      setStatus({ kind: "error", msg: t("data.exportErr") });
     }
   };
 
@@ -46,40 +48,40 @@ export function DataManager() {
       const ok = importData(text);
       setStatus(
         ok
-          ? { kind: "ok", msg: "Datos importados. Recarga si no ves los cambios." }
-          : { kind: "error", msg: "Archivo no válido." },
+          ? { kind: "ok", msg: t("data.importOk") }
+          : { kind: "error", msg: t("data.importErr") },
       );
       if (fileRef.current) fileRef.current.value = "";
     };
     reader.onerror = () =>
-      setStatus({ kind: "error", msg: "No se pudo leer el archivo." });
+      setStatus({ kind: "error", msg: t("data.readErr") });
     reader.readAsText(file);
   };
 
   return (
     <>
       <Card as="section">
-        <p className="eyebrow text-sage-300">Tu configuración</p>
+        <p className="eyebrow text-sage-300">{t("data.yourConfig")}</p>
         <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
-          Cómo está la app
+          {t("care.configTitle")}
         </h2>
 
         <dl className="mt-4 space-y-2.5">
           <ConfigRow
-            label="Idioma"
+            label={t("config.language")}
             value={LANGUAGES.find((l) => l.value === config.language)?.native ?? "—"}
           />
           <ConfigRow
-            label="Somatotipo"
+            label={t("config.somatotype")}
             value={SOMATOTYPE_MAP[config.somatotype].label}
           />
           <ConfigRow
-            label="Modo"
+            label={t("config.mode")}
             value={ADHERENCE_MAP[config.adherence].label}
           />
           <ConfigRow
-            label="Explicaciones"
-            value={config.verbosity === "verbose" ? "Guiado" : "Directo"}
+            label={t("config.explanations")}
+            value={config.verbosity === "verbose" ? t("config.guided") : t("config.direct")}
           />
         </dl>
 
@@ -87,7 +89,7 @@ export function DataManager() {
           onClick={() => {
             if (
               confirm(
-                "¿Volver a la pantalla de bienvenida para reconfigurar? Tu progreso no se borra.",
+                t("config.reconfigureConfirm"),
               )
             ) {
               resetOnboarding();
@@ -95,27 +97,25 @@ export function DataManager() {
           }}
           className="btn btn-secondary w-full mt-4"
         >
-          Reconfigurar
+          {t("common.reconfigure")}
         </button>
       </Card>
 
       <Card as="section" className="mt-5">
-      <p className="eyebrow text-sage-300">Tus datos</p>
+      <p className="eyebrow text-sage-300">{t("data.yourData")}</p>
       <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
-        Copia de seguridad
+        {t("care.dataTitle")}
       </h2>
       <p className="mt-2 text-sm text-bone-300 leading-relaxed">
-        Tu progreso se guarda solo en este teléfono. Exporta una copia en un
-        archivo para guardarla en Archivos o Drive, y reimpórtala si cambias de
-        dispositivo o reinstalas la app.
+        {t("data.backupIntro")}
       </p>
 
       <div className="mt-4 flex gap-3">
         <button onClick={handleExport} className="btn btn-secondary flex-1">
-          Exportar
+          {t("common.export")}
         </button>
         <button onClick={handleImportClick} className="btn btn-secondary flex-1">
-          Importar
+          {t("common.import")}
         </button>
       </div>
 
@@ -139,7 +139,7 @@ export function DataManager() {
       )}
 
       <p className="mt-3 text-[11px] text-bone-400 italic leading-relaxed">
-        Importar sustituye el progreso actual por el del archivo.
+        {t("data.importReplaces")}
       </p>
     </Card>
     </>

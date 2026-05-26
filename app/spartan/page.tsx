@@ -21,9 +21,9 @@ export default function SpartanPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Circuito J.E.D."
-        title="Spartan"
-        subtitle="HIIT de 15 ejercicios. Toca cualquiera para ver la ilustración y la técnica."
+        eyebrowKey="spartan.eyebrow"
+        titleKey="spartan.title"
+        subtitleKey="spartan.subtitle"
         numeral="15"
       />
 
@@ -32,8 +32,8 @@ export default function SpartanPage() {
           <>
             <ModuleRole
               accent="terra"
-              role="El finalizador metabólico"
-              text="Es tu sesión de acondicionamiento explosivo. En la pestaña Hoy aparece los días de potencia y recuperación; replica la demanda cardiovascular del fútbol y el pádel sin castigar las piernas para los partidos."
+              roleKey="spartan.role"
+              textKey="spartan.roleText"
             />
 
             {/* Selector de nivel */}

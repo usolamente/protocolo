@@ -11,9 +11,9 @@ export default function HomePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Protocolo"
-        title="Hoy"
-        subtitle="Tu plan del día: foco de entrenamiento, deporte, dieta y recuperación."
+        eyebrowKey="home.eyebrow"
+        titleKey="home.title"
+        subtitleKey="home.subtitle"
         numeral="—"
       />
       <StreakBanner />

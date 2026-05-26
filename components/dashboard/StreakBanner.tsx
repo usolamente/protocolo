@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useProtocolStore } from "@/lib/store";
+import { useT } from "@/lib/i18n/useT";
 
 export function StreakBanner() {
+  const t = useT();
   const getStreak = useProtocolStore((s) => s.getStreak);
   // Releer cuando cambie cualquier cosa que afecte a la racha.
   const log = useProtocolStore((s) => s.log);
@@ -28,11 +30,12 @@ export function StreakBanner() {
           <p className="numeral text-2xl text-terra-300 tabular leading-none">
             {streak}
             <span className="text-sm text-bone-300 ml-1.5 font-sans not-italic">
-              {streak === 1 ? "día" : "días"} seguidos
+              {streak === 1 ? t("common.day") : t("common.days")}{" "}
+              {t("home.streakInARow")}
             </span>
           </p>
           <p className="text-[11px] text-bone-400 mt-1">
-            Racha de adherencia · sigue así
+            {t("home.streak")}
           </p>
         </div>
       </div>

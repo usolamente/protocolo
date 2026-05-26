@@ -9,9 +9,9 @@ export default function CalendarioPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Microciclo"
-        title="Semana"
-        subtitle="Toca cada día o la compra para desplegarlos."
+        eyebrowKey="week.eyebrow"
+        titleKey="week.title"
+        subtitleKey="week.subtitle"
         numeral="01"
       />
 

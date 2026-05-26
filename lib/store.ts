@@ -344,7 +344,7 @@ export const useProtocolStore = create<ProtocolState>()(
       // ── Configuración / bienvenida ─────────────────────
       config: {
         configured: false,
-        language: "cast",
+        language: "eng",
         somatotype: "mesomorfo",
         adherence: "disciplina",
         verbosity: "verbose",

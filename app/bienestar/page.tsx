@@ -11,17 +11,17 @@ export default function BienestarPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Cuerpo · Mente · Recuperación"
-        title="Cuidado"
-        subtitle="Respiración y diario antes del esfuerzo, calor después, y una rutina para cuidar la espalda."
+        eyebrowKey="care.eyebrow"
+        titleKey="care.title"
+        subtitleKey="care.subtitle"
         numeral="∞"
       />
 
       <div className="px-5 py-6 space-y-5">
         <ModuleRole
           accent="sage"
-          role="Tu espacio de autocuidado"
-          text="Reúne la rutina matutina (respiración 3-6 y diario estoico), la recuperación termal (sauna y piscina) y el cuidado postural de la espalda. Cierra el círculo de serenidad y recuperación del protocolo."
+          roleKey="care.role"
+          textKey="care.roleText"
         />
 
         {/* Respiración 3-6 */}

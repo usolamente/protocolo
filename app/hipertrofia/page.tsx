@@ -30,17 +30,17 @@ export default function HipertrofiaPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Hipertrofia"
-        title="Logbook"
-        subtitle="Registra series, repeticiones y peso. Sobrecarga progresiva semana a semana."
+        eyebrowKey="weights.eyebrow"
+        titleKey="weights.title"
+        subtitleKey="weights.subtitle"
         numeral="5×5"
       />
 
       <div className="px-5 py-6 space-y-5">
         <ModuleRole
           accent="sage"
-          role="El registro de fuerza del día"
-          text="Es el entrenamiento de pesas que aparece como foco en Hoy y Semana (plan 5×5 MFQH). Aquí apuntas series, repeticiones y peso de cada ejercicio para asegurar la sobrecarga progresiva semana a semana."
+          roleKey="weights.role"
+          textKey="weights.roleText"
         />
 
         {/* Selector de día */}

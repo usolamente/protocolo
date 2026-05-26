@@ -36,17 +36,17 @@ export default function RetoPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Calistenia"
-        title="Reto 30 días"
-        subtitle="Sentadillas, plancha, flexiones y abdominales. Descansos obligatorios cada cierto tramo."
+        eyebrowKey="challenge.eyebrow"
+        titleKey="challenge.title"
+        subtitleKey="challenge.subtitle"
         numeral="30"
       />
 
       <div className="px-5 py-6 space-y-5">
         <ModuleRole
           accent="sage"
-          role="El reto diario de calistenia"
-          text="Un añadido de volumen progresivo que sumas cada día, al margen del foco de pesas que veas en Hoy y Semana. Marca aquí las series a medida que las completas; los días de descanso del reto son obligatorios."
+          roleKey="challenge.role"
+          textKey="challenge.roleText"
         />
 
         {/* Panel de progreso */}

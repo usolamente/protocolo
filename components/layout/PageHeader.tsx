@@ -1,11 +1,18 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/system/ThemeToggle";
 import { VerbosityToggle } from "@/components/system/VerbosityToggle";
+import { useT } from "@/lib/i18n/useT";
 
 interface PageHeaderProps {
-  eyebrow: string;
-  title: string;
+  // Texto plano (compatibilidad) o clave i18n. Si se pasa *Key, tiene prioridad.
+  eyebrow?: string;
+  title?: string;
   subtitle?: string;
+  eyebrowKey?: string;
+  titleKey?: string;
+  subtitleKey?: string;
   numeral?: string;
   className?: string;
   hideToggle?: boolean;
@@ -15,10 +22,18 @@ export function PageHeader({
   eyebrow,
   title,
   subtitle,
+  eyebrowKey,
+  titleKey,
+  subtitleKey,
   numeral,
   className,
   hideToggle,
 }: PageHeaderProps) {
+  const t = useT();
+  const eb = eyebrowKey ? t(eyebrowKey) : eyebrow;
+  const ti = titleKey ? t(titleKey) : title;
+  const sub = subtitleKey ? t(subtitleKey) : subtitle;
+
   return (
     <header
       className={cn("pt-10 pb-6 px-5 border-b border-ink-800 relative", className)}
@@ -37,13 +52,13 @@ export function PageHeader({
           {numeral}
         </span>
       )}
-      <p className="eyebrow text-sage-300">{eyebrow}</p>
+      {eb && <p className="eyebrow text-sage-300">{eb}</p>}
       <h1 className="mt-2 font-display text-3xl font-light text-bone-50 leading-[1.1] tracking-tight">
-        {title}
+        {ti}
       </h1>
-      {subtitle && (
+      {sub && (
         <p className="mt-3 text-sm text-bone-300 leading-relaxed max-w-[30ch]">
-          {subtitle}
+          {sub}
         </p>
       )}
     </header>

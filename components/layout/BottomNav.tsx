@@ -3,18 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/useT";
 
 const NAV = [
-  { href: "/", label: "Hoy", icon: HomeIcon },
-  { href: "/calendario", label: "Semana", icon: CalendarIcon },
-  { href: "/reto", label: "Reto", icon: GridIcon },
-  { href: "/spartan", label: "Spartan", icon: BoltIcon },
-  { href: "/hipertrofia", label: "Pesas", icon: BarbellIcon },
-  { href: "/bienestar", label: "Cuidado", icon: LotusIcon },
+  { href: "/", key: "nav.home", icon: HomeIcon },
+  { href: "/calendario", key: "nav.week", icon: CalendarIcon },
+  { href: "/reto", key: "nav.challenge", icon: GridIcon },
+  { href: "/spartan", key: "nav.spartan", icon: BoltIcon },
+  { href: "/hipertrofia", key: "nav.weights", icon: BarbellIcon },
+  { href: "/bienestar", key: "nav.care", icon: LotusIcon },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
+  const t = useT();
 
   return (
     <nav
@@ -51,7 +53,7 @@ export function BottomNav() {
                   className="font-mono text-[10px] tracking-widest uppercase"
                   style={{ letterSpacing: "0.08em" }}
                 >
-                  {item.label}
+                  {t(item.key)}
                 </span>
               </Link>
             </li>

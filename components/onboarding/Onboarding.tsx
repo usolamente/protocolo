@@ -9,13 +9,17 @@ import {
 } from "@/lib/data/config";
 import type { Language, Somatotype, Adherence } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { translate } from "@/lib/i18n/dictionary";
 
 export function Onboarding() {
   const complete = useProtocolStore((s) => s.completeOnboarding);
   const [step, setStep] = useState(0);
-  const [language, setLanguage] = useState<Language>("cast");
+  const [language, setLanguage] = useState<Language>("eng");
   const [somatotype, setSomatotype] = useState<Somatotype | null>(null);
   const [adherence, setAdherence] = useState<Adherence | null>(null);
+
+  // Traducción en vivo según el idioma que se está eligiendo (preview).
+  const t = (key: string) => translate(language, key);
 
   const canNext =
     (step === 0 && !!language) ||
@@ -39,14 +43,14 @@ export function Onboarding() {
         <div className="mb-8">
           <p className="eyebrow text-sage-300">Protocolo</p>
           <h1 className="font-display text-4xl font-light text-bone-50 mt-2 leading-tight">
-            {step === 0 && "Hola"}
-            {step === 1 && "Tu cuerpo"}
-            {step === 2 && "Tu ritmo"}
+            {step === 0 && t("onboarding.hello")}
+            {step === 1 && t("onboarding.body")}
+            {step === 2 && t("onboarding.rhythm")}
           </h1>
           <p className="text-sm text-bone-300 mt-2 leading-relaxed">
-            {step === 0 && "Vamos a configurar la app a tu medida. Empecemos por el idioma."}
-            {step === 1 && "Elige el somatotipo que mejor te describe. Ajustaremos la dieta y el entrenamiento."}
-            {step === 2 && "¿Con cuánta disciplina quieres seguir el plan? Podrás cambiarlo cuando quieras."}
+            {step === 0 && t("onboarding.langIntro")}
+            {step === 1 && t("onboarding.bodyIntro")}
+            {step === 2 && t("onboarding.rhythmIntro")}
           </p>
         </div>
 
@@ -77,8 +81,7 @@ export function Onboarding() {
                 />
               ))}
               <p className="text-[11px] text-bone-400 italic mt-3 leading-relaxed">
-                De momento la app está en castellano. El catalán y el inglés
-                llegarán en una próxima actualización; tu elección se guardará.
+                {t("onboarding.langNote")}
               </p>
             </div>
           )}
@@ -121,7 +124,7 @@ export function Onboarding() {
               onClick={() => setStep((s) => s - 1)}
               className="btn btn-secondary"
             >
-              Atrás
+              {t("common.back")}
             </button>
           )}
           {step < 2 ? (
@@ -130,7 +133,7 @@ export function Onboarding() {
               disabled={!canNext}
               className="btn btn-primary flex-1 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Siguiente
+              {t("common.next")}
             </button>
           ) : (
             <button
@@ -138,7 +141,7 @@ export function Onboarding() {
               disabled={!canNext}
               className="btn btn-primary flex-1 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Empezar
+              {t("onboarding.begin")}
             </button>
           )}
         </div>

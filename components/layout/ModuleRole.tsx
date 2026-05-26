@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useProtocolStore } from "@/lib/store";
+import { useT } from "@/lib/i18n/useT";
 import type { ReactNode } from "react";
 
 type Accent = "sage" | "terra" | "clay";
@@ -38,17 +39,24 @@ const ACCENT: Record<
 export function ModuleRole({
   role,
   text,
+  roleKey,
+  textKey,
   accent = "sage",
   children,
 }: {
-  role: string;
-  text: string;
+  role?: string;
+  text?: string;
+  roleKey?: string;
+  textKey?: string;
   accent?: Accent;
   children?: ReactNode;
 }) {
   const a = ACCENT[accent];
+  const t = useT();
   const verbosity = useProtocolStore((s) => s.config.verbosity);
   if (verbosity === "synthetic") return null;
+  const roleText = roleKey ? t(roleKey) : role;
+  const bodyText = textKey ? t(textKey) : text;
   return (
     <div className={cn("rounded-xl border p-4", a.ring, a.bg)}>
       <div className="flex items-center gap-2">
@@ -59,10 +67,10 @@ export function ModuleRole({
             a.text,
           )}
         >
-          {role}
+          {roleText}
         </p>
       </div>
-      <p className="mt-2 text-sm text-bone-200 leading-relaxed">{text}</p>
+      <p className="mt-2 text-sm text-bone-200 leading-relaxed">{bodyText}</p>
       {children}
     </div>
   );

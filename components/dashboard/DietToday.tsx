@@ -15,6 +15,7 @@ import {
 } from "@/lib/data/diet";
 import { currentWeekDay, toISODate } from "@/lib/utils";
 import { useProtocolStore } from "@/lib/store";
+import { useT } from "@/lib/i18n/useT";
 import { SOMATOTYPE_MAP } from "@/lib/data/config";
 import type { Meal, WeekDay } from "@/lib/types";
 
@@ -101,6 +102,7 @@ export function DietToday() {
 }
 
 function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
+  const t = useT();
   const isShake = meal.kind === "shake";
   const status = useProtocolStore((s) => s.mealStatus[`${iso}:${meal.slot}`] ?? null);
   const setMealStatus = useProtocolStore((s) => s.setMealStatus);
@@ -170,7 +172,7 @@ function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
                   }`}
                 >
                   <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7" /></svg>
-                  Hecha
+                  {t("common.done")}
                 </button>
                 <button
                   onClick={() => setMealStatus(iso, meal.slot, "skipped")}
@@ -181,7 +183,7 @@ function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
                   }`}
                 >
                   <svg viewBox="0 0 24 24" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-                  Saltada
+                  {t("common.skipped")}
                 </button>
               </div>
             )}

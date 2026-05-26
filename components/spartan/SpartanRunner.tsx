@@ -8,6 +8,7 @@ import {
 } from "@/lib/data/spartanCircuit";
 import type { SpartanLevel } from "@/lib/types";
 import { useProtocolStore } from "@/lib/store";
+import { useT } from "@/lib/i18n/useT";
 import { cn, formatTime, num } from "@/lib/utils";
 
 type Phase = "idle" | "exercise" | "rest" | "done";
@@ -27,6 +28,7 @@ const INITIAL: RunnerState = {
 };
 
 export function SpartanRunner({ level }: { level: SpartanLevel }) {
+  const t = useT();
   const cfg = SPARTAN_LEVELS[level];
   const [state, setState] = useState<RunnerState>(INITIAL);
   const [paused, setPaused] = useState(false);
@@ -94,7 +96,7 @@ export function SpartanRunner({ level }: { level: SpartanLevel }) {
           15 ejercicios · 30 s cada uno · descanso automático de hasta {SPARTAN_REST_MAX}s entre rondas
         </p>
         <button onClick={start} className="btn btn-primary mt-8 w-full">
-          Iniciar circuito
+          {t("spartan.startCircuit")}
         </button>
       </div>
     );
@@ -103,14 +105,14 @@ export function SpartanRunner({ level }: { level: SpartanLevel }) {
   if (state.phase === "done") {
     return (
       <div className="text-center py-8">
-        <p className="font-display italic text-bone-50 text-4xl">Completado.</p>
+        <p className="font-display italic text-bone-50 text-4xl">{t("spartan.completed")}</p>
         <div className="rule my-8 max-w-[12rem] mx-auto" aria-hidden />
         <p className="text-sm text-bone-300">
           {cfg.sets} rondas · {SPARTAN_CIRCUIT.length} ejercicios cada una
         </p>
         <p className="text-xs text-bone-400 mt-1">Sesión registrada · hidrátate</p>
         <button onClick={reset} className="btn btn-secondary mt-8 w-full">
-          Otra ronda
+          {t("spartan.anotherRound")}
         </button>
       </div>
     );
@@ -131,7 +133,7 @@ export function SpartanRunner({ level }: { level: SpartanLevel }) {
       {/* Cabecera de ronda */}
       <div className="flex items-baseline justify-between mb-6">
         <span className="eyebrow text-bone-300">
-          Ronda {state.setIndex + 1}<span className="text-bone-400"> / {cfg.sets}</span>
+          {t("spartan.round")} {state.setIndex + 1}<span className="text-bone-400"> / {cfg.sets}</span>
         </span>
         <span className="font-mono text-xs tabular text-bone-400">
           {num(state.exIndex + 1)} / 15
@@ -164,7 +166,7 @@ export function SpartanRunner({ level }: { level: SpartanLevel }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="eyebrow text-bone-400">{isRest ? "Descanso" : "Activo"}</p>
+          <p className="eyebrow text-bone-400">{isRest ? t("spartan.rest") : t("spartan.active")}</p>
           <p
             className={cn(
               "font-display font-light tabular text-7xl mt-2",
@@ -182,19 +184,19 @@ export function SpartanRunner({ level }: { level: SpartanLevel }) {
           {isRest ? "—" : num(currentEx.index)}
         </p>
         <p className="font-display text-3xl font-light text-bone-50 leading-tight mt-1">
-          {isRest ? "Recupera la respiración" : currentEx.name}
+          {isRest ? t("spartan.catchBreath") : currentEx.name}
         </p>
       </div>
 
       {/* Siguiente */}
       {!isRest && nextEx && (
         <p className="text-center text-xs text-bone-400 mt-3 font-mono uppercase tracking-widest">
-          Siguiente · {nextEx.name}
+          {t("spartan.next")} · {nextEx.name}
         </p>
       )}
       {isRest && (
         <p className="text-center text-xs text-bone-400 mt-3 font-mono uppercase tracking-widest">
-          Comienza ronda {state.setIndex + 2}
+          {t("spartan.startsRound")} {state.setIndex + 2}
         </p>
       )}
 
@@ -204,7 +206,7 @@ export function SpartanRunner({ level }: { level: SpartanLevel }) {
           onClick={() => setPaused((p) => !p)}
           className="btn btn-secondary flex-1"
         >
-          {paused ? "Reanudar" : "Pausar"}
+          {paused ? t("spartan.resume") : t("spartan.pause")}
         </button>
         <button onClick={skip} className="btn btn-ghost flex-1">
           Saltar →

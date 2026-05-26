@@ -4,36 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { useProtocolStore } from "@/lib/store";
+import { useT } from "@/lib/i18n/useT";
 
 const MODULES = [
-  {
-    href: "/reto",
-    name: "Reto",
-    color: "text-sage-300",
-    desc: "El reto de 30 días de calistenia (sentadillas, plancha, flexiones, abdominales). Es un añadido diario de volumen progresivo, independiente del foco del día.",
-  },
-  {
-    href: "/spartan",
-    name: "Spartan",
-    color: "text-terra-300",
-    desc: "El circuito HIIT de 15 ejercicios. Es tu finalizador metabólico los días de potencia y para mantener el fondo de cara a pádel y fútbol.",
-  },
-  {
-    href: "/hipertrofia",
-    name: "Pesas",
-    color: "text-bone-100",
-    desc: "El registro del entrenamiento de fuerza del día (el que ves en Hoy y Semana). Apuntas series, repes y peso para asegurar la sobrecarga progresiva 5×5.",
-  },
-  {
-    href: "/bienestar",
-    name: "Cuidado",
-    color: "text-sage-200",
-    desc: "Tu autocuidado: respiración 3-6, diario estoico, termoterapia (sauna y piscina) y una rutina para la espalda. Cierra el círculo de recuperación y serenidad.",
-  },
+  { href: "/reto", nameKey: "nav.challenge", color: "text-sage-300", descKey: "howItWorks.challenge" },
+  { href: "/spartan", nameKey: "nav.spartan", color: "text-terra-300", descKey: "howItWorks.spartan" },
+  { href: "/hipertrofia", nameKey: "nav.weights", color: "text-bone-100", descKey: "howItWorks.weights" },
+  { href: "/bienestar", nameKey: "nav.care", color: "text-sage-200", descKey: "howItWorks.care" },
 ];
 
 export function HowItWorks() {
   const [open, setOpen] = useState(false);
+  const t = useT();
   const verbosity = useProtocolStore((s) => s.config.verbosity);
   if (verbosity === "synthetic") return null;
 
@@ -48,7 +30,7 @@ export function HowItWorks() {
           <div className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-sage-300" aria-hidden />
             <p className="font-mono text-[10px] tracking-widest uppercase text-sage-300">
-              ¿Cómo funciona la app?
+              {t("howItWorks.title")}
             </p>
           </div>
           <svg
@@ -69,10 +51,7 @@ export function HowItWorks() {
         {open && (
           <div className="mt-3 space-y-3 animate-fade-up">
             <p className="text-[13px] text-bone-300 leading-relaxed">
-              <span className="text-bone-100">Hoy</span> y{" "}
-              <span className="text-bone-100">Semana</span> son tu mapa: qué
-              toca cada día (foco de pesas, deporte, dieta). Las otras cuatro
-              pestañas son las herramientas que ejecutas:
+              {t("howItWorks.intro")}
             </p>
             <ul className="space-y-2.5">
               {MODULES.map((m) => (
@@ -84,10 +63,10 @@ export function HowItWorks() {
                     <p
                       className={`font-mono text-[11px] tracking-widest uppercase ${m.color}`}
                     >
-                      {m.name}
+                      {t(m.nameKey)}
                     </p>
                     <p className="text-[12px] text-bone-300 leading-snug mt-1">
-                      {m.desc}
+                      {t(m.descKey)}
                     </p>
                   </Link>
                 </li>
