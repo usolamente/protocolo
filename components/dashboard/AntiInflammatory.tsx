@@ -7,9 +7,11 @@ import {
   ANTIINFLAMMATORY_INTRO,
 } from "@/lib/data/antiInflammatory";
 import { useProtocolStore } from "@/lib/store";
+import { useTData } from "@/lib/i18n/useTData";
 import { cn } from "@/lib/utils";
 
 export function AntiInflammatory() {
+  const td = useTData();
   const [open, setOpen] = useState(false);
   const verbose = useProtocolStore((s) => s.config.verbosity === "verbose");
 
@@ -45,21 +47,21 @@ export function AntiInflammatory() {
 
         {verbose && !open && (
           <p className="text-[12px] text-bone-300 leading-snug mt-2">
-            {ANTIINFLAMMATORY_INTRO}
+            {td(ANTIINFLAMMATORY_INTRO)}
           </p>
         )}
 
         {open && (
           <div className="mt-3 space-y-3 animate-fade-up">
             <p className="text-[12px] text-bone-200 leading-relaxed">
-              {ANTIINFLAMMATORY_INTRO}
+              {td(ANTIINFLAMMATORY_INTRO)}
             </p>
             <ul className="space-y-2.5">
               {ANTIINFLAMMATORY_PRINCIPLES.map((p) => (
                 <li key={p.title}>
-                  <p className="text-sm text-bone-100 font-medium">{p.title}</p>
+                  <p className="text-sm text-bone-100 font-medium">{td(p.title)}</p>
                   <p className="text-[12px] text-bone-300 leading-snug mt-0.5">
-                    {p.text}
+                    {td(p.text)}
                   </p>
                 </li>
               ))}

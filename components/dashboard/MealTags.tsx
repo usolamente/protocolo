@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { tagsForMeal } from "@/lib/data/antiInflammatory";
+import { useTData } from "@/lib/i18n/useTData";
 
 /**
  * Muestra, bajo una comida, los sellos antiinflamatorios de sus ingredientes.
  * Compacto: una fila de etiquetas; al tocar una, despliega el porqué.
  */
 export function MealTags({ items }: { items: string[] }) {
+  const td = useTData();
   const tags = tagsForMeal(items);
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
@@ -26,13 +28,13 @@ export function MealTags({ items }: { items: string[] }) {
                 : "border-ink-700 text-bone-400 hover:border-terra-300/50 hover:text-terra-300"
             }`}
           >
-            {tag.label}
+            {td(tag.label)}
           </button>
         ))}
       </div>
       {openIdx !== null && tags[openIdx] && (
         <p className="text-[11px] text-terra-300/90 italic leading-snug mt-1.5 animate-fade-up">
-          {tags[openIdx].why}
+          {td(tags[openIdx].why)}
         </p>
       )}
     </div>

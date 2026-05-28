@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { MORNING_PHASES } from "@/lib/data/morningRoutine";
 import { cn } from "@/lib/utils";
+import { useTData } from "@/lib/i18n/useTData";
 
 function timeToMinutes(t: string): number {
   const [h, m] = t.split(":").map(Number);
@@ -25,6 +26,7 @@ const KIND_BADGE: Record<string, string> = {
 };
 
 export function MorningTimeline() {
+  const td = useTData();
   const [nowMin, setNowMin] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -116,10 +118,10 @@ export function MorningTimeline() {
                   isActive ? "text-bone-50" : "text-bone-100",
                 )}
               >
-                {phase.label}
+                {td(phase.label)}
               </h3>
               <p className="text-xs text-bone-300 mt-1 leading-relaxed">
-                {phase.detail}
+                {td(phase.detail)}
               </p>
             </li>
           );

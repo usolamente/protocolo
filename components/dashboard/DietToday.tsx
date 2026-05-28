@@ -16,10 +16,12 @@ import {
 import { currentWeekDay, toISODate } from "@/lib/utils";
 import { useProtocolStore } from "@/lib/store";
 import { useT } from "@/lib/i18n/useT";
+import { useTData } from "@/lib/i18n/useTData";
 import { SOMATOTYPE_MAP } from "@/lib/data/config";
 import type { Meal, WeekDay } from "@/lib/types";
 
 export function DietToday() {
+  const td = useTData();
   const [today, setToday] = useState<WeekDay | null>(null);
   const [iso, setIso] = useState<string>("");
   const [variant, setVariant] = useState(0);
@@ -55,7 +57,7 @@ export function DietToday() {
         </span>
       </div>
       <p className="font-mono text-[10px] tracking-widest uppercase text-sage-300 mb-3">
-        {WEEK_VARIANT_LABELS[variant]}
+        {td(WEEK_VARIANT_LABELS[variant])}
       </p>
 
       {/* Ajuste por somatotipo */}
@@ -103,6 +105,7 @@ export function DietToday() {
 
 function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
   const t = useT();
+  const td = useTData();
   const isShake = meal.kind === "shake";
   const status = useProtocolStore((s) => s.mealStatus[`${iso}:${meal.slot}`] ?? null);
   const setMealStatus = useProtocolStore((s) => s.setMealStatus);
@@ -128,7 +131,7 @@ function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
           <div className="min-w-0 flex-1">
             <div className="flex items-baseline justify-between gap-2">
               <p className="text-sm font-medium text-bone-100 leading-tight">
-                {meal.title}
+                {td(meal.title)}
               </p>
               <span className="font-mono text-[11px] tabular text-bone-400 shrink-0">
                 {meal.time}
@@ -155,7 +158,7 @@ function MealRow({ meal, iso }: { meal: Meal; iso: string }) {
                   isShake ? "text-terra-300/90" : "text-sage-300/90"
                 }`}
               >
-                {meal.note}
+                {td(meal.note)}
               </p>
             )}
 

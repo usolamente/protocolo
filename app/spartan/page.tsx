@@ -7,10 +7,12 @@ import { SpartanRunner } from "@/components/spartan/SpartanRunner";
 import { ExerciseDetailModal } from "@/components/spartan/ExerciseDetailModal";
 import { ModuleRole } from "@/components/layout/ModuleRole";
 import { SPARTAN_CIRCUIT, SPARTAN_LEVELS } from "@/lib/data/spartanCircuit";
+import { useTData } from "@/lib/i18n/useTData";
 import type { SpartanLevel } from "@/lib/types";
 import { cn, num } from "@/lib/utils";
 
 export default function SpartanPage() {
+  const td = useTData();
   const [level, setLevel] = useState<SpartanLevel>(2);
   const [running, setRunning] = useState(false);
   const [detailIndex, setDetailIndex] = useState<number | null>(null);
@@ -92,7 +94,7 @@ export default function SpartanPage() {
                       </span>
                       <span className="flex-1 min-w-0">
                         <span className="block text-sm text-bone-100 truncate">
-                          {ex.nameEs}
+                          {td(ex.nameEs)}
                         </span>
                         <span className="block text-[11px] text-bone-400 truncate">
                           {ex.reps} reps · {ex.duration}s

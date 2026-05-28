@@ -7,6 +7,7 @@ import { ExerciseAnimation } from "@/components/hypertrophy/ExerciseAnimation";
 import { HideToggle } from "@/components/system/HideToggle";
 import type { ExerciseSpec, WeekDay } from "@/lib/types";
 import { cn, num } from "@/lib/utils";
+import { useTData } from "@/lib/i18n/useTData";
 
 interface Props {
   exercise: ExerciseSpec;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props) {
+  const td = useTData();
   const log = useProtocolStore((s) => s.getTodayLog());
   const logSet = useProtocolStore((s) => s.logSet);
   const removeLast = useProtocolStore((s) => s.removeLastSet);
@@ -50,7 +52,7 @@ export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props
           {num(ordinal)}
         </span>
         <span className="flex-1 text-sm text-bone-400 line-through truncate">
-          {exercise.name}
+          {td(exercise.name)}
         </span>
         <HideToggle itemKey={hideKey} groupKeys={groupKeys} />
       </div>
@@ -71,7 +73,7 @@ export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props
                 className="text-left group/title flex items-center gap-1.5"
               >
                 <h3 className="text-sm text-bone-50 leading-snug group-hover/title:text-sage-300 transition-colors">
-                  {exercise.name}
+                  {td(exercise.name)}
                 </h3>
                 <svg
                   viewBox="0 0 24 24"
@@ -90,7 +92,7 @@ export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props
               </button>
             ) : (
               <h3 className="text-sm text-bone-50 leading-snug">
-                {exercise.name}
+                {td(exercise.name)}
               </h3>
             )}
             <p className="text-[11px] font-mono text-bone-400 tabular mt-0.5">
@@ -107,7 +109,7 @@ export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props
         </div>
         {exercise.note && (
           <p className="text-[11px] text-bone-400 italic mt-1.5 leading-snug pl-8">
-            {exercise.note}
+            {td(exercise.note)}
           </p>
         )}
       </header>
@@ -117,7 +119,7 @@ export function ExerciseLogger({ exercise, day, ordinal, groupKeys = [] }: Props
         <div className="border-t border-ink-800 bg-[#f4f1ea] animate-fade-up">
           <ExerciseAnimation
             images={gif.images}
-            alt={exercise.name}
+            alt={td(exercise.name)}
             className="w-full max-w-[280px] mx-auto"
           />
           <p className="text-center text-[10px] font-mono text-ink-600 pb-2">

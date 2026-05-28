@@ -5,9 +5,11 @@ import { getWeekDiet, PRE_WORKOUT, POST_WORKOUT } from "@/lib/data/diet";
 import { currentWeekDates } from "@/lib/utils";
 import { ActivitySelector } from "@/components/dashboard/ActivitySelector";
 import { MealTags } from "@/components/dashboard/MealTags";
+import { useTData } from "@/lib/i18n/useTData";
 import type { WeekDay } from "@/lib/types";
 
 export function DayDietPeek({ day }: { day: WeekDay }) {
+  const td = useTData();
   const [open, setOpen] = useState(false);
   const [iso, setIso] = useState<string>("");
 
@@ -62,7 +64,7 @@ export function DayDietPeek({ day }: { day: WeekDay }) {
                     m.kind === "shake" ? "text-terra-300" : "text-bone-100"
                   }`}
                 >
-                  {m.title}
+                  {td(m.title)}
                 </p>
                 <p className="text-[11px] text-bone-400 leading-snug">
                   {m.items.join(" · ")}

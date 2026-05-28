@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { getWeeklyShopping, WEEK_VARIANT_LABELS, weekOfMonthIndex } from "@/lib/data/diet";
 import { cn } from "@/lib/utils";
+import { useTData } from "@/lib/i18n/useTData";
 
 const STORAGE_KEY = "protocolo-shopping";
 
 export function ShoppingList({ embedded = false }: { embedded?: boolean }) {
+  const td = useTData();
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [hydrated, setHydrated] = useState(false);
   const [variant, setVariant] = useState(0);
@@ -55,7 +57,7 @@ export function ShoppingList({ embedded = false }: { embedded?: boolean }) {
     <>
       {embedded ? (
         <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mb-3">
-          {WEEK_VARIANT_LABELS[variant]}
+          {td(WEEK_VARIANT_LABELS[variant])}
         </p>
       ) : (
         <div className="flex items-start justify-between mb-1">
@@ -65,7 +67,7 @@ export function ShoppingList({ embedded = false }: { embedded?: boolean }) {
               Ingredientes de la semana
             </h2>
             <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mt-1.5">
-              {WEEK_VARIANT_LABELS[variant]}
+              {td(WEEK_VARIANT_LABELS[variant])}
             </p>
           </div>
           <span className="numeral text-4xl text-ink-700" aria-hidden>
@@ -92,7 +94,7 @@ export function ShoppingList({ embedded = false }: { embedded?: boolean }) {
         {shopping.map((cat) => (
           <div key={cat.category}>
             <p className="font-mono text-[11px] tracking-widest uppercase text-bone-300 mb-2">
-              {cat.category}
+              {td(cat.category)}
             </p>
             <ul className="space-y-1">
               {cat.items.map((it) => {

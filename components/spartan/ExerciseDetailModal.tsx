@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import type { SpartanExercise } from "@/lib/types";
 import { num } from "@/lib/utils";
+import { useT } from "@/lib/i18n/useT";
+import { useTData } from "@/lib/i18n/useTData";
 
 interface Props {
   exercise: SpartanExercise | null;
@@ -17,6 +19,8 @@ export function ExerciseDetailModal({
   onPrev,
   onNext,
 }: Props) {
+  const t = useT();
+  const td = useTData();
   useEffect(() => {
     if (!exercise) return;
     const onKey = (e: KeyboardEvent) => {
@@ -39,7 +43,7 @@ export function ExerciseDetailModal({
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
       role="dialog"
       aria-modal="true"
-      aria-label={exercise.nameEs}
+      aria-label={td(exercise.nameEs)}
     >
       {/* Backdrop */}
       <button
@@ -58,14 +62,11 @@ export function ExerciseDetailModal({
         <div className="px-5 pt-4 pb-2 flex items-start justify-between gap-3">
           <div>
             <p className="eyebrow text-terra-300">
-              Ejercicio {num(exercise.index)} de 15
+              {t("spartan.exerciseOf").replace("{n}", num(exercise.index))}
             </p>
             <h3 className="mt-1 font-display text-2xl font-light text-bone-50 leading-tight">
-              {exercise.nameEs}
+              {td(exercise.nameEs)}
             </h3>
-            <p className="text-xs text-bone-400 mt-0.5 italic">
-              {exercise.name}
-            </p>
           </div>
           <button
             onClick={onClose}
@@ -90,7 +91,7 @@ export function ExerciseDetailModal({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={exercise.image}
-            alt={`Ilustración: ${exercise.nameEs}`}
+            alt={td(exercise.nameEs)}
             className="w-full h-auto object-contain"
           />
         </div>
@@ -118,10 +119,10 @@ export function ExerciseDetailModal({
 
           <div>
             <p className="font-mono text-[10px] tracking-widest uppercase text-bone-400 mb-1">
-              Técnica
+              {t("common.technique")}
             </p>
             <p className="text-sm text-bone-200 leading-relaxed">
-              {exercise.cue}
+              {td(exercise.cue)}
             </p>
           </div>
         </div>

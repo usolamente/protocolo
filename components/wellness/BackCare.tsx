@@ -5,10 +5,12 @@ import { Card } from "@/components/ui/Card";
 import { BACK_ROUTINE, BACK_DISCLAIMER, POSTURE_HABITS } from "@/lib/data/backRoutine";
 import { getBackIllustration } from "@/lib/data/backIllustrations";
 import { useProtocolStore } from "@/lib/store";
+import { useTData } from "@/lib/i18n/useTData";
 import { cn } from "@/lib/utils";
 import type { BackExercise, BackPhase } from "@/lib/data/backRoutine";
 
 export function BackCare() {
+  const td = useTData();
   const verbosity = useProtocolStore((s) => s.config.verbosity);
   const verbose = verbosity === "verbose";
   const [openPhase, setOpenPhase] = useState<string | null>("respiracion");
@@ -73,9 +75,9 @@ export function BackCare() {
           <ul className="mt-3 space-y-3 animate-fade-up">
             {POSTURE_HABITS.map((h) => (
               <li key={h.title}>
-                <p className="text-sm text-bone-100 font-medium">{h.title}</p>
+                <p className="text-sm text-bone-100 font-medium">{td(h.title)}</p>
                 <p className="text-[12px] text-bone-300 leading-snug mt-0.5">
-                  {h.text}
+                  {td(h.text)}
                 </p>
               </li>
             ))}
@@ -84,7 +86,7 @@ export function BackCare() {
       </div>
 
       <p className="mt-4 text-[11px] text-bone-400 italic leading-relaxed">
-        {BACK_DISCLAIMER}
+        {td(BACK_DISCLAIMER)}
       </p>
     </Card>
   );
@@ -101,6 +103,7 @@ function PhaseBlock({
   onToggle: () => void;
   verbose: boolean;
 }) {
+  const td = useTData();
   return (
     <div className="rounded-xl border border-ink-800 overflow-hidden">
       <button
@@ -110,9 +113,9 @@ function PhaseBlock({
       >
         <div className="flex-1 min-w-0">
           <p className="font-mono text-[10px] tracking-widest uppercase text-sage-300">
-            {phase.label}
+            {td(phase.label)}
           </p>
-          <p className="text-sm text-bone-100 mt-0.5">{phase.tagline}</p>
+          <p className="text-sm text-bone-100 mt-0.5">{td(phase.tagline)}</p>
         </div>
         <svg
           viewBox="0 0 24 24"
@@ -133,7 +136,7 @@ function PhaseBlock({
       {open && (
         <div className="px-3.5 pb-3.5 animate-fade-up">
           <p className="text-[11px] font-mono text-bone-400 mb-3">
-            {phase.position}
+            {td(phase.position)}
           </p>
           <ol className="space-y-3">
             {phase.exercises.map((ex, i) => (
@@ -153,6 +156,7 @@ function ExerciseRow({
   exercise: BackExercise;
   verbose: boolean;
 }) {
+  const td = useTData();
   const [open, setOpen] = useState(false);
   const illustration = getBackIllustration(exercise.name);
 
@@ -165,7 +169,7 @@ function ExerciseRow({
       >
         <span className="flex items-center gap-1.5 min-w-0">
           <span className="text-sm text-bone-50 group-hover:text-sage-300 transition-colors">
-            {exercise.name}
+            {td(exercise.name)}
           </span>
           {illustration && (
             <svg
@@ -185,13 +189,13 @@ function ExerciseRow({
           )}
         </span>
         <span className="font-mono text-[11px] tabular text-sage-300 shrink-0">
-          {exercise.dose}
+          {td(exercise.dose)}
         </span>
       </button>
 
       {verbose && (
         <p className="text-[12px] text-bone-300 leading-snug mt-1">
-          {exercise.how}
+          {td(exercise.how)}
         </p>
       )}
 

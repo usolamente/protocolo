@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardEyebrow, CardTitle } from "@/components/ui/Card";
 import { WEEK_PLAN } from "@/lib/data/weekPlan";
 import { currentWeekDay, WEEK_LABELS } from "@/lib/utils";
+import { useTData } from "@/lib/i18n/useTData";
 import type { WeekDay } from "@/lib/types";
 
 const FOCUS_COLOR: Record<string, string> = {
@@ -18,6 +19,7 @@ const FOCUS_COLOR: Record<string, string> = {
 };
 
 export function TodayFocus() {
+  const td = useTData();
   const [today, setToday] = useState<WeekDay | null>(null);
 
   useEffect(() => {
@@ -44,8 +46,8 @@ export function TodayFocus() {
       <Card className="group-hover:border-sage-700">
         <div className="flex items-start justify-between mb-3">
           <div>
-            <CardEyebrow accent>{WEEK_LABELS[today]}</CardEyebrow>
-            <CardTitle className="mt-1">{plan.focusLabel}</CardTitle>
+            <CardEyebrow accent>{td(WEEK_LABELS[today])}</CardEyebrow>
+            <CardTitle className="mt-1">{td(plan.focusLabel)}</CardTitle>
           </div>
           <span
             className={`numeral text-5xl ${FOCUS_COLOR[plan.focus] ?? "text-bone-400"}`}
@@ -61,7 +63,7 @@ export function TodayFocus() {
         {plan.sport && (
           <div className="mt-4 pt-4 border-t border-ink-800 flex items-center justify-between">
             <span className="eyebrow text-terra-300">
-              {plan.sport.emoji} {plan.sport.label}
+              {plan.sport.emoji} {td(plan.sport.label)}
             </span>
             <span className="font-mono text-xs tabular text-bone-300">
               {plan.sport.start} – {plan.sport.end}

@@ -14,8 +14,10 @@ import {
   WEEK_SHORT,
 } from "@/lib/utils";
 import type { WeekDay } from "@/lib/types";
+import { useTData } from "@/lib/i18n/useTData";
 
 export default function HipertrofiaPage() {
+  const td = useTData();
   const [selected, setSelected] = useState<WeekDay>("lunes");
   const [mounted, setMounted] = useState(false);
 
@@ -74,9 +76,9 @@ export default function HipertrofiaPage() {
 
         {/* Cabecera del día */}
         <Card>
-          <p className="eyebrow text-sage-300">{WEEK_LABELS[plan.day]}</p>
+          <p className="eyebrow text-sage-300">{td(WEEK_LABELS[plan.day])}</p>
           <h2 className="font-display text-2xl font-light text-bone-50 mt-1 leading-tight">
-            {plan.focusLabel}
+            {td(plan.focusLabel)}
           </h2>
           <p className="text-sm text-bone-300 mt-2 leading-relaxed">
             {plan.description}
