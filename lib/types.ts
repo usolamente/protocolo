@@ -42,12 +42,16 @@ export interface WorkBlock {
   end: string;
 }
 
+export type LoadKind = "weights" | "spartan" | "rest";
+
 export interface DayPlan {
   day: WeekDay;
   label: string;
   focus: FocusType;
   focusLabel: string;
   description: string;
+  /** Tipo de carga del día: indica qué se abre por defecto en la pestaña Entreno. */
+  loadKind: LoadKind;
   exercises: ExerciseSpec[];
   sport?: SportBlock;
 }

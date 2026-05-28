@@ -7,9 +7,8 @@ import { useProtocolStore } from "@/lib/store";
 import { useT } from "@/lib/i18n/useT";
 
 const MODULES = [
+  { href: "/entreno", nameKey: "nav.training", color: "text-bone-100", descKey: "howItWorks.training" },
   { href: "/reto", nameKey: "nav.challenge", color: "text-sage-300", descKey: "howItWorks.challenge" },
-  { href: "/spartan", nameKey: "nav.spartan", color: "text-terra-300", descKey: "howItWorks.spartan" },
-  { href: "/hipertrofia", nameKey: "nav.weights", color: "text-bone-100", descKey: "howItWorks.weights" },
   { href: "/bienestar", nameKey: "nav.care", color: "text-sage-200", descKey: "howItWorks.care" },
 ];
 

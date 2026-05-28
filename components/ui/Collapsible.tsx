@@ -19,7 +19,7 @@ export function Collapsible({
   defaultOpen?: boolean;
   badge?: ReactNode;
   children: ReactNode;
-  accent?: "bone" | "sage";
+  accent?: "bone" | "sage" | "terra";
 }) {
   const [open, setOpen] = useState(defaultOpen);
 
@@ -34,7 +34,11 @@ export function Collapsible({
           <p
             className={cn(
               "eyebrow",
-              accent === "sage" ? "text-sage-300" : "text-bone-300",
+              accent === "sage"
+                ? "text-sage-300"
+                : accent === "terra"
+                  ? "text-terra-300"
+                  : "text-bone-300",
             )}
           >
             {title}

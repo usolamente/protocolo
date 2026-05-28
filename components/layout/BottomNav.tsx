@@ -7,10 +7,9 @@ import { useT } from "@/lib/i18n/useT";
 
 const NAV = [
   { href: "/", key: "nav.home", icon: HomeIcon },
+  { href: "/entreno", key: "nav.training", icon: BarbellIcon },
   { href: "/calendario", key: "nav.week", icon: CalendarIcon },
   { href: "/reto", key: "nav.challenge", icon: GridIcon },
-  { href: "/spartan", key: "nav.spartan", icon: BoltIcon },
-  { href: "/hipertrofia", key: "nav.weights", icon: BarbellIcon },
   { href: "/bienestar", key: "nav.care", icon: LotusIcon },
 ];
 

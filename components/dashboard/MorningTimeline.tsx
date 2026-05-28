@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { MORNING_PHASES } from "@/lib/data/morningRoutine";
-import { cn } from "@/lib/utils";
+import { getDayPlan } from "@/lib/data/weekPlan";
+import { cn, currentWeekDay } from "@/lib/utils";
+import { useT } from "@/lib/i18n/useT";
 import { useTData } from "@/lib/i18n/useTData";
 
 function timeToMinutes(t: string): number {
@@ -27,6 +30,9 @@ const KIND_BADGE: Record<string, string> = {
 
 export function MorningTimeline() {
   const td = useTData();
+  const t = useT();
+  const todayPlan = getDayPlan(currentWeekDay());
+  const todayKind = todayPlan?.loadKind ?? "rest";
   const [nowMin, setNowMin] = useState<number | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -123,11 +129,60 @@ export function MorningTimeline() {
               <p className="text-xs text-bone-300 mt-1 leading-relaxed">
                 {td(phase.detail)}
               </p>
+              {phase.kind === "lift" && (
+                <TrainingCTA kind={todayKind} t={t} />
+              )}
             </li>
           );
         })}
       </ol>
       )}
     </div>
+  );
+}
+
+function TrainingCTA({
+  kind,
+  t,
+}: {
+  kind: "weights" | "spartan" | "rest";
+  t: (k: string) => string;
+}) {
+  if (kind === "rest") {
+    return (
+      <p className="mt-2 text-[11px] font-mono text-bone-400 italic">
+        {t("training.todayIsRest")}
+      </p>
+    );
+  }
+  const labelKey =
+    kind === "weights" ? "training.todayIsWeights" : "training.todayIsSpartan";
+  const accent =
+    kind === "weights"
+      ? "border-sage-300/40 text-sage-300 hover:bg-sage-900/30"
+      : "border-terra-300/40 text-terra-300 hover:bg-terra-300/10";
+  return (
+    <Link
+      href={`/entreno?section=${kind}`}
+      className={cn(
+        "mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors",
+        accent,
+      )}
+    >
+      <span className="font-mono text-[11px] tracking-wide">
+        {t(labelKey)}
+      </span>
+      <svg
+        viewBox="0 0 24 24"
+        className="w-3 h-3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </Link>
   );
 }

@@ -161,6 +161,20 @@ const en: Dict = {
   "spartan.resume": "Resume",
   "spartan.pause": "Pause",
   "spartan.exerciseOf": "Exercise {n} of 15",
+  "nav.training": "Training",
+  "training.eyebrow": "Today's session",
+  "training.title": "Training",
+  "training.subtitle": "Weights and the Spartan circuit. The plan tells you which one today.",
+  "training.role": "The day's training session",
+  "training.roleText": "Your day's training. Weights and the Spartan circuit live here in two sections; the one your plan calls for today opens automatically.",
+  "training.weightsSection": "Weights",
+  "training.spartanSection": "Spartan",
+  "training.todayIsWeights": "Today: weights",
+  "training.todayIsSpartan": "Today: Spartan",
+  "training.todayIsRest": "Today: rest",
+  "training.openSession": "Open session",
+  "howItWorks.training": "The day's training session. Weights and the Spartan HIIT circuit live here in two sections. The plan tells you which one today.",
+  "spartan.exitConfirm": "Exit the circuit? You'll lose your progress.",
 };
 
 // Castellano — relleno (redacción original de la app).
@@ -290,6 +304,20 @@ const es: Dict = {
   "spartan.resume": "Reanudar",
   "spartan.pause": "Pausar",
   "spartan.exerciseOf": "Ejercicio {n} de 15",
+  "nav.training": "Entreno",
+  "training.eyebrow": "Sesión de hoy",
+  "training.title": "Entreno",
+  "training.subtitle": "Pesas y el circuito Spartan. El plan te dice qué toca hoy.",
+  "training.role": "La sesión de entreno del día",
+  "training.roleText": "Tu sesión de entrenamiento del día. Pesas y el circuito Spartan viven aquí en dos secciones; la que toca según tu plan se abre automáticamente.",
+  "training.weightsSection": "Pesas",
+  "training.spartanSection": "Spartan",
+  "training.todayIsWeights": "Hoy: pesas",
+  "training.todayIsSpartan": "Hoy: Spartan",
+  "training.todayIsRest": "Hoy: descanso",
+  "training.openSession": "Abrir sesión",
+  "howItWorks.training": "La sesión de entreno del día. Pesas y el circuito Spartan HIIT viven aquí en dos secciones. El plan te dice cuál toca hoy.",
+  "spartan.exitConfirm": "¿Salir del circuito? Perderás el progreso.",
 };
 
 // Catalán — plantilla (cae a inglés hasta traducir). Se rellena vía CSV.
@@ -409,6 +437,20 @@ const ca: Dict = {
   "spartan.resume": "Reprèn",
   "spartan.pause": "Pausa",
   "spartan.exerciseOf": "Exercici {n} de 15",
+  "nav.training": "Entrenament",
+  "training.eyebrow": "Sessió d'avui",
+  "training.title": "Entrenament",
+  "training.subtitle": "Peses i el circuit Spartan. El pla et diu què toca avui.",
+  "training.role": "La sessió d'entrenament del dia",
+  "training.roleText": "La teva sessió d'entrenament del dia. Peses i el circuit Spartan viuen aquí en dues seccions; la que toca segons el teu pla s'obre automàticament.",
+  "training.weightsSection": "Peses",
+  "training.spartanSection": "Spartan",
+  "training.todayIsWeights": "Avui: peses",
+  "training.todayIsSpartan": "Avui: Spartan",
+  "training.todayIsRest": "Avui: descans",
+  "training.openSession": "Obre la sessió",
+  "howItWorks.training": "La sessió d'entrenament del dia. Peses i el circuit Spartan HIIT viuen aquí en dues seccions. El pla et diu quina toca avui.",
+  "spartan.exitConfirm": "Vols sortir del circuit? Perdràs el progrés.",
 };
 
 const DICTS: Record<Language, Dict> = { eng: en, cast: es, cat: ca };

@@ -37,6 +37,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Lunes",
     focus: "push",
     focusLabel: "Empuje · Pectoral · Core",
+    loadKind: "weights",
     description:
       "SNC fresco tras el domingo. Fuerza absoluta con press de banca 5×5, después estímulo metabólico con flexiones y aislamiento del deltoides medial.",
     exercises: [
@@ -84,6 +85,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Martes",
     focus: "pull",
     focusLabel: "Tracción · Espalda · Bíceps",
+    loadKind: "weights",
     description:
       "Margen amplio antes del turno (15:00). Protocolo Yates/Huberman: bajo volumen, intensidad máxima al fallo. Pre-agotamiento dorsal antes de las dominadas.",
     exercises: [
@@ -131,6 +133,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Miércoles",
     focus: "calistenia",
     focusLabel: "Calistenia · Core · Movilidad",
+    loadKind: "spartan",
     description:
       "Bisagra fisiológica antes del pádel vespertino. Sin cargas pesadas: agilidad, resistencia relativa, movilidad de cadera y aductores.",
     exercises: [
@@ -172,6 +175,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Jueves",
     focus: "potencia",
     focusLabel: "Potencia superior total",
+    loadKind: "weights",
     description:
       "Fuerza bruta del tren superior. Cero trabajo de cuádriceps: el glucógeno de las piernas queda intacto para los sprints del fútbol nocturno.",
     exercises: [
@@ -213,6 +217,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Viernes",
     focus: "recuperacion",
     focusLabel: "Recuperación activa · Termoterapia",
+    loadKind: "rest",
     description:
       "Microtrauma alto tras el fútbol. Cero excéntricos pesados. Yoga extenso, aislamiento ligero de brazos y sauna prolongada.",
     exercises: [
@@ -253,6 +258,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Sábado",
     focus: "calistenia-avanzada",
     focusLabel: "Dominio anatómico calisténico",
+    loadKind: "spartan",
     description:
       "SNC receptivo a volúmenes altos. Fondos, muscle-ups, retención isométrica. Finalizador acumulativo del reto.",
     exercises: [
@@ -293,6 +299,7 @@ export const WEEK_PLAN: DayPlan[] = [
     label: "Domingo",
     focus: "descanso",
     focusLabel: "Calibración mental · Supercompensación",
+    loadKind: "rest",
     description:
       "Día de síntesis proteica. Prohibido hipertrofia o resistencia. Solo meditación profunda (escaneo corporal, 30 min) y estiramiento suave.",
     exercises: [
