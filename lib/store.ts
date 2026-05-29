@@ -232,10 +232,14 @@ export const useProtocolStore = create<ProtocolState>()(
           return { activities: next };
         }),
 
-      getDayActivities: (date) => get().activities[date] ?? [],
+      getDayActivities: (date) => {
+        const v = get().activities[date];
+        return Array.isArray(v) ? v : [];
+      },
 
       getDayPrimaryActivity: (date) => {
-        const list = get().activities[date] ?? [];
+        const raw = get().activities[date];
+        const list = Array.isArray(raw) ? raw : [];
         if (list.length === 0) return null;
         // Ranking de demanda metabólica/glucolítica (mayor → menor).
         // Cuando hay varios deportes en un día, el "combustible" de la
@@ -421,22 +425,51 @@ export const useProtocolStore = create<ProtocolState>()(
       // (una sola por día) a Record<date, SelectedActivity[]>
       // (lista con turno opcional).
       migrate: (persistedState: unknown, fromVersion: number) => {
-        const state = (persistedState ?? {}) as { activities?: unknown };
-        if (fromVersion < 2 && state.activities && typeof state.activities === "object") {
-          const old = state.activities as Record<string, string>;
+        // Migración v1 → v2: activities pasa de Record<date, Activity>
+        // (una sola por día) a Record<date, SelectedActivity[]>.
+        // IMPORTANTE: devolvemos el estado COMPLETO, mutando solo
+        // activities. Si devolviéramos un objeto parcial perderíamos
+        // config, mealStatus, hiddenItems, etc., y la app crashearía
+        // al rehidratar.
+        const state: Record<string, unknown> = { ...(persistedState as object || {}) };
+
+        const acts = state.activities;
+        const needsMigration =
+          fromVersion < 2 || // versión explícita anterior
+          (acts && typeof acts === "object" && !Array.isArray(acts) &&
+            // detecta formato viejo: valores son strings (Activity) en vez de arrays
+            Object.values(acts as Record<string, unknown>).some(
+              (v) => typeof v === "string",
+            ));
+
+        if (needsMigration && acts && typeof acts === "object") {
+          const old = acts as Record<string, unknown>;
           const migrated: Record<string, SelectedActivity[]> = {};
+          const valid = new Set([
+            "correr", "futbol", "basket", "padel", "tenis",
+            "natacion", "ciclismo", "escalar", "otros",
+          ]);
           for (const [date, value] of Object.entries(old)) {
-            if (!value || value === "none") continue;
-            // El antiguo "varios" pasa a "otros" (renombrado).
+            // Si ya es un array (nuevo formato), respétalo
+            if (Array.isArray(value)) {
+              migrated[date] = value as SelectedActivity[];
+              continue;
+            }
+            // Formato viejo: string
+            if (typeof value !== "string" || !value || value === "none") continue;
+            // El antiguo "varios" pasa a "otros"
             const v = value === "varios" ? "otros" : value;
-            // Solo conservamos valores que existen en el nuevo catálogo.
-            const valid = ["correr", "futbol", "basket", "padel", "tenis", "natacion", "ciclismo", "escalar", "otros"];
-            if (valid.includes(v)) {
-              migrated[date] = [{ value: v as Exclude<Activity, "none">, shift: null }];
+            if (valid.has(v)) {
+              migrated[date] = [
+                { value: v as Exclude<Activity, "none">, shift: null },
+              ];
             }
           }
           state.activities = migrated;
+        } else if (!acts) {
+          state.activities = {};
         }
+
         return state;
       },
       storage: createJSONStorage(() => {

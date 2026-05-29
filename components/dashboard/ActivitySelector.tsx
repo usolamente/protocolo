@@ -24,7 +24,10 @@ export function ActivitySelector({
   compact?: boolean;
 }) {
   const t = useT();
-  const list = useProtocolStore((s) => s.activities[date] ?? []);
+  const list = useProtocolStore((s) => {
+    const v = s.activities[date];
+    return Array.isArray(v) ? v : [];
+  });
   const setDayActivities = useProtocolStore((s) => s.setDayActivities);
   const [open, setOpen] = useState(false);
 
