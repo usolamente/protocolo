@@ -15,18 +15,11 @@ export const MORNING_PHASES: MorningPhase[] = [
   },
   {
     start: "07:00",
-    end: "07:15",
+    end: "07:20",
     label: "Elasticidad y Yoga",
     detail:
       "Gato-Vaca, estiramiento lateral, Prasarita Padottanasana, movilidad articular.",
     kind: "yoga",
-  },
-  {
-    start: "07:15",
-    end: "07:20",
-    label: "Tránsito",
-    detail: "Caminata al gimnasio (5 minutos). Capilarización periférica.",
-    kind: "transit",
   },
   {
     start: "07:20",

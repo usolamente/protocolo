@@ -52,7 +52,7 @@ export function MorningTimeline() {
         <div>
           <p className="eyebrow text-bone-300">Ventana matutina</p>
           <p className="font-display italic text-3xl text-bone-50 leading-none mt-1">
-            06:50 <span className="text-bone-400">—</span> 08:30
+            6:50
           </p>
         </div>
         <span className="flex items-center gap-2">
@@ -148,41 +148,50 @@ function TrainingCTA({
   kind: "weights" | "spartan" | "rest";
   t: (k: string) => string;
 }) {
-  if (kind === "rest") {
-    return (
-      <p className="mt-2 text-[11px] font-mono text-bone-400 italic">
-        {t("training.todayIsRest")}
-      </p>
-    );
-  }
-  const labelKey =
-    kind === "weights" ? "training.todayIsWeights" : "training.todayIsSpartan";
-  const accent =
-    kind === "weights"
-      ? "border-sage-300/40 text-sage-300 hover:bg-sage-900/30"
-      : "border-terra-300/40 text-terra-300 hover:bg-terra-300/10";
+  // Selector libre: el usuario elige Pesas o Spartan, sin memoria.
+  // `kind` es solo una SUGERENCIA visual basada en el plan del día:
+  // el botón sugerido se muestra con su acento; el otro queda atenuado.
+  const suggestWeights = kind === "weights";
+  const suggestSpartan = kind === "spartan";
+
   return (
-    <Link
-      href={`/entreno?section=${kind}`}
-      className={cn(
-        "mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors",
-        accent,
-      )}
-    >
-      <span className="font-mono text-[11px] tracking-wide">
-        {t(labelKey)}
-      </span>
-      <svg
-        viewBox="0 0 24 24"
-        className="w-3 h-3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+    <div className="mt-3 flex items-center gap-2">
+      <Link
+        href="/entreno?section=weights"
+        className={cn(
+          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 transition-colors",
+          suggestWeights
+            ? "border-sage-300/60 bg-sage-900/30 text-sage-200"
+            : "border-ink-700 text-bone-300 hover:border-sage-300/40 hover:text-sage-300",
+        )}
       >
-        <path d="M9 6l6 6-6 6" />
-      </svg>
-    </Link>
+        <span className="font-mono text-[11px] tracking-wide">
+          {t("training.weightsSection")}
+        </span>
+        {suggestWeights && (
+          <span className="font-mono text-[9px] uppercase tracking-wider text-sage-300/70">
+            ·
+          </span>
+        )}
+      </Link>
+      <Link
+        href="/entreno?section=spartan"
+        className={cn(
+          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 transition-colors",
+          suggestSpartan
+            ? "border-terra-300/60 bg-terra-300/15 text-terra-200"
+            : "border-ink-700 text-bone-300 hover:border-terra-300/40 hover:text-terra-300",
+        )}
+      >
+        <span className="font-mono text-[11px] tracking-wide">
+          {t("training.spartanSection")}
+        </span>
+        {suggestSpartan && (
+          <span className="font-mono text-[9px] uppercase tracking-wider text-terra-300/70">
+            ·
+          </span>
+        )}
+      </Link>
+    </div>
   );
 }

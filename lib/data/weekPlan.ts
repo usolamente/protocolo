@@ -217,15 +217,8 @@ export const WEEK_PLAN: DayPlan[] = [
     focusLabel: "Recuperación activa · Termoterapia",
     loadKind: "rest",
     description:
-      "Día de microtrauma alto. Cero excéntricos pesados. Yoga extenso, aislamiento ligero de brazos y sauna prolongada.",
+      "Día de microtrauma alto. Cero excéntricos pesados. Aislamiento ligero de brazos y sauna prolongada.",
     exercises: [
-      {
-        id: "fri-yoga",
-        name: "Flujo de Yoga Extenso",
-        sets: "25 min",
-        load: "Postura del Mono · Psoas profundo · asanas de suelo",
-        note: "Restaura longitud de sarcómero",
-      },
       {
         id: "fri-tri-extension",
         name: "Extensión de Tríceps en Polea",
