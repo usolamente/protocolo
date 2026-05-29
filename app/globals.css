@@ -97,6 +97,16 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Tres escalas de tipografía siguiendo las guías de Apple/Google.
+   Como Tailwind usa rem (1rem = font-size de html), basta con cambiar
+   el font-size del root para escalar toda la tipografía proporcionalmente.
+   - small  = actual (base 16px → cuerpo ≈14-16px, títulos ≈20-22px)
+   - medium = +12.5% (base 18px → cuerpo ≈16-18px, títulos ≈22-26px)
+   - large  = +25%   (base 20px → cuerpo ≈17-20px, títulos ≈25-30px) */
+html.size-small  { font-size: 16px; }
+html.size-medium { font-size: 18px; }
+html.size-large  { font-size: 20px; }
+
 body {
   background-image:
     radial-gradient(ellipse at 50% -20%, var(--glow-sage) 0%, transparent 60%),

@@ -316,12 +316,32 @@ export const ACTIVITY_FUEL: Record<Exclude<Activity, "none">, ActivityFuel> = {
     post: "Recarga rápida: fruta + batido o cena con arroz/pasta.",
     note: "Alta demanda anaeróbica y de impacto: hidratos y sodio.",
   },
+  padel: {
+    pre: "Carbohidrato moderado 1–2 h antes (arroz, pasta o tostadas) + hidratación.",
+    post: "Proteína + carbohidrato para reponer y arrancar la recuperación.",
+    note: "Esfuerzo intermitente con cambios de dirección: hidratos y electrolitos.",
+  },
+  tenis: {
+    pre: "Carbohidrato moderado 1–2 h antes + hidratación abundante.",
+    post: "Proteína magra + carbohidrato; sodio si el partido fue largo.",
+    note: "Sesiones largas: cuida la hidratación y reposición de sales.",
+  },
+  natacion: {
+    pre: "Snack ligero de carbohidrato 60–90 min antes; evita comidas pesadas.",
+    post: "Proteína + carbohidrato; bebida tibia si el agua estaba fría.",
+    note: "Demanda mixta aeróbica-anaeróbica: hidratos suficientes, evita pesadez.",
+  },
+  ciclismo: {
+    pre: "Carga sólida 2 h antes (avena, arroz) o gel si la salida es corta.",
+    post: "Recarga rápida de glucógeno: carbohidrato + proteína en la hora siguiente.",
+    note: "Salidas largas: avituallamiento continuo de carbohidratos y sodio.",
+  },
   escalar: {
     pre: "Carbohidrato moderado + café 60 min antes.",
     post: "Proteína para antebrazos y espalda; magnesio si hay calambres.",
     note: "Fuerza-resistencia y agarre: proteína suficiente, hidratos moderados.",
   },
-  varios: {
+  otros: {
     pre: "Snack ligero de carbohidrato si la sesión supera 45 min.",
     post: "Proteína + algo de fruta según intensidad.",
     note: "Ajusta la carga de hidratos a cómo de exigente haya sido.",

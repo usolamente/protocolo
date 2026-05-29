@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/system/ThemeToggle";
 import { VerbosityToggle } from "@/components/system/VerbosityToggle";
+import { SizeToggle } from "@/components/system/SizeToggle";
 import { useT } from "@/lib/i18n/useT";
 
 interface PageHeaderProps {
@@ -41,6 +42,7 @@ export function PageHeader({
       {!hideToggle && (
         <div className="absolute right-4 top-8 z-10 flex items-center gap-2">
           <VerbosityToggle />
+          <SizeToggle />
           <ThemeToggle />
         </div>
       )}

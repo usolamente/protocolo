@@ -167,8 +167,20 @@ export type Activity =
   | "correr"
   | "futbol"
   | "basket"
+  | "padel"
+  | "tenis"
+  | "natacion"
+  | "ciclismo"
   | "escalar"
-  | "varios";
+  | "otros";
+
+export type ActivityShift = "morning" | "afternoon" | null;
+
+/** Actividad seleccionada en un día concreto, con turno opcional. */
+export interface SelectedActivity {
+  value: Exclude<Activity, "none">;
+  shift: ActivityShift;
+}
 
 // ─────────────────────────────────────────────────────────
 // Configuración del usuario (pantalla de bienvenida)

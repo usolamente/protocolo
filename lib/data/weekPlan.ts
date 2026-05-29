@@ -135,14 +135,14 @@ export const WEEK_PLAN: DayPlan[] = [
     focusLabel: "Calistenia · Core · Movilidad",
     loadKind: "spartan",
     description:
-      "Bisagra fisiológica antes del pádel vespertino. Sin cargas pesadas: agilidad, resistencia relativa, movilidad de cadera y aductores.",
+      "Bisagra fisiológica para una tarde activa. Sin cargas pesadas: agilidad, resistencia relativa, movilidad de cadera y aductores.",
     exercises: [
       {
         id: "wed-plank-challenge",
         name: "Reto de Plancha (estándar · lateral · con toques)",
         sets: "4 × 60+ seg",
         load: "Peso corporal",
-        note: "Transverso abdominal · torque rotacional pádel",
+        note: "Transverso abdominal · torque rotacional",
       },
       {
         id: "wed-aus-pullups",
@@ -166,7 +166,6 @@ export const WEEK_PLAN: DayPlan[] = [
         note: "Apertura mecánica de aductores",
       },
     ],
-    sport: SPORT_BLOCKS[0],
   },
 
   // ── JUEVES ─────────────────────────────────────────────
@@ -177,7 +176,7 @@ export const WEEK_PLAN: DayPlan[] = [
     focusLabel: "Potencia superior total",
     loadKind: "weights",
     description:
-      "Fuerza bruta del tren superior. Cero trabajo de cuádriceps: el glucógeno de las piernas queda intacto para los sprints del fútbol nocturno.",
+      "Fuerza bruta del tren superior. Cero trabajo de cuádriceps: el glucógeno de las piernas queda intacto por si toca deporte vespertino exigente.",
     exercises: [
       {
         id: "thu-weighted-pullups",
@@ -208,7 +207,6 @@ export const WEEK_PLAN: DayPlan[] = [
         note: "Contorno del hombro (Tennyson)",
       },
     ],
-    sport: SPORT_BLOCKS[1],
   },
 
   // ── VIERNES ────────────────────────────────────────────
@@ -219,7 +217,7 @@ export const WEEK_PLAN: DayPlan[] = [
     focusLabel: "Recuperación activa · Termoterapia",
     loadKind: "rest",
     description:
-      "Microtrauma alto tras el fútbol. Cero excéntricos pesados. Yoga extenso, aislamiento ligero de brazos y sauna prolongada.",
+      "Día de microtrauma alto. Cero excéntricos pesados. Yoga extenso, aislamiento ligero de brazos y sauna prolongada.",
     exercises: [
       {
         id: "fri-yoga",

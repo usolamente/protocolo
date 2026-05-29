@@ -72,12 +72,16 @@ export function num(n: number, width = 2): string {
 
 /** Catálogo de actividades complementarias. */
 export const ACTIVITIES: { value: Activity; label: string; emoji: string }[] = [
-  { value: "none", label: "Sin actividad", emoji: "—" },
+  { value: "none", label: "Ninguna", emoji: "—" },
   { value: "correr", label: "Correr", emoji: "🏃" },
   { value: "futbol", label: "Fútbol", emoji: "⚽" },
-  { value: "basket", label: "Básket", emoji: "🏀" },
+  { value: "basket", label: "Baloncesto", emoji: "🏀" },
+  { value: "padel", label: "Pádel", emoji: "🎾" },
+  { value: "tenis", label: "Tenis", emoji: "🎾" },
+  { value: "natacion", label: "Natación", emoji: "🏊" },
+  { value: "ciclismo", label: "Ciclismo", emoji: "🚴" },
   { value: "escalar", label: "Escalar", emoji: "🧗" },
-  { value: "varios", label: "Deportes varios", emoji: "🤸" },
+  { value: "otros", label: "Otros", emoji: "✦" },
 ];
 
 export const ACTIVITY_META: Record<Activity, { label: string; emoji: string }> =

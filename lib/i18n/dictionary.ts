@@ -175,6 +175,16 @@ const en: Dict = {
   "training.openSession": "Open session",
   "howItWorks.training": "The day's training session. Weights and the Spartan HIIT circuit live here in two sections. The plan tells you which one today.",
   "spartan.exitConfirm": "Exit the circuit? You'll lose your progress.",
+  "activity.none": "no sport today",
+  "activity.morning": "morning",
+  "activity.afternoon": "afternoon",
+  "activity.morningShort": "AM",
+  "activity.afternoonShort": "PM",
+  "common.edit": "Edit",
+  "size.label": "Text size",
+  "size.small": "Small",
+  "size.medium": "Medium",
+  "size.large": "Large",
 };
 
 // Castellano — relleno (redacción original de la app).
@@ -318,6 +328,16 @@ const es: Dict = {
   "training.openSession": "Abrir sesión",
   "howItWorks.training": "La sesión de entreno del día. Pesas y el circuito Spartan HIIT viven aquí en dos secciones. El plan te dice cuál toca hoy.",
   "spartan.exitConfirm": "¿Salir del circuito? Perderás el progreso.",
+  "activity.none": "sin deporte hoy",
+  "activity.morning": "mañana",
+  "activity.afternoon": "tarde",
+  "activity.morningShort": "AM",
+  "activity.afternoonShort": "PM",
+  "common.edit": "Editar",
+  "size.label": "Tamaño de letra",
+  "size.small": "Pequeño",
+  "size.medium": "Mediano",
+  "size.large": "Grande",
 };
 
 // Catalán — plantilla (cae a inglés hasta traducir). Se rellena vía CSV.
@@ -451,6 +471,16 @@ const ca: Dict = {
   "training.openSession": "Obre la sessió",
   "howItWorks.training": "La sessió d'entrenament del dia. Peses i el circuit Spartan HIIT viuen aquí en dues seccions. El pla et diu quina toca avui.",
   "spartan.exitConfirm": "Vols sortir del circuit? Perdràs el progrés.",
+  "activity.none": "sense esport avui",
+  "activity.morning": "matí",
+  "activity.afternoon": "tarda",
+  "activity.morningShort": "AM",
+  "activity.afternoonShort": "PM",
+  "common.edit": "Edita",
+  "size.label": "Mida de lletra",
+  "size.small": "Petita",
+  "size.medium": "Mitjana",
+  "size.large": "Gran",
 };
 
 const DICTS: Record<Language, Dict> = { eng: en, cast: es, cat: ca };

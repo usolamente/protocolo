@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { ActivitySelector } from "@/components/dashboard/ActivitySelector";
 import { MealTags } from "@/components/dashboard/MealTags";
+import { MorningTimeline } from "@/components/dashboard/MorningTimeline";
 import {
   PRE_WORKOUT,
   POST_WORKOUT,
@@ -33,7 +34,9 @@ export function DietToday() {
     setVariant(weekOfMonthIndex(now));
   }, []);
 
-  const activity = useProtocolStore((s) => (iso ? s.activities[iso] : "none"));
+  const primaryActivity = useProtocolStore((s) =>
+    iso ? s.getDayPrimaryActivity(iso) : null,
+  );
   const somatotype = useProtocolStore((s) => s.config.somatotype);
   const soma = SOMATOTYPE_MAP[somatotype];
 
@@ -46,7 +49,7 @@ export function DietToday() {
   }
 
   const meals: Meal[] = [PRE_WORKOUT, POST_WORKOUT, ...getWeekDiet()[today]];
-  const fuel = getActivityFuel(activity ?? "none");
+  const fuel = primaryActivity ? getActivityFuel(primaryActivity.value) : null;
 
   return (
     <section className="px-5 py-2">
@@ -91,7 +94,19 @@ export function DietToday() {
       </Card>
 
       <ol className="space-y-2.5">
-        {meals.map((meal, i) => (
+        {/* Batido pre-entreno */}
+        <MealRow meal={meals[0]} iso={iso} />
+
+        {/* Cronología matutina: ocurre entre el batido pre y el post */}
+        <li className="!list-none">
+          <MorningTimeline />
+        </li>
+
+        {/* Batido post-entreno */}
+        <MealRow meal={meals[1]} iso={iso} />
+
+        {/* Resto de comidas del día */}
+        {meals.slice(2).map((meal, i) => (
           <MealRow key={`${meal.slot}-${i}`} meal={meal} iso={iso} />
         ))}
       </ol>

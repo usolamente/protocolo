@@ -11,6 +11,7 @@ import type {
   LoggedSet,
   WeekDay,
   Activity,
+  SelectedActivity,
   UserConfig,
 } from "./types";
 import { toISODate } from "./utils";
@@ -48,9 +49,12 @@ interface ProtocolState {
   getTodayJournal: () => JournalEntry | undefined;
 
   // ACTIVIDADES COMPLEMENTARIAS (por fecha ISO)
-  activities: Record<string, Activity>;
-  setActivity: (date: string, activity: Activity) => void;
-  getActivity: (date: string) => Activity;
+  // ACTIVIDADES COMPLEMENTARIAS por fecha ISO (varias por día, con turno)
+  activities: Record<string, SelectedActivity[]>;
+  setDayActivities: (date: string, list: SelectedActivity[]) => void;
+  getDayActivities: (date: string) => SelectedActivity[];
+  /** Devuelve la actividad de mayor demanda metabólica del día, o null. */
+  getDayPrimaryActivity: (date: string) => SelectedActivity | null;
 
   // ESTADO DE COMIDAS (por fecha + slot: "hecha" / "saltada")
   mealStatus: Record<string, "done" | "skipped">; // clave "YYYY-MM-DD:slot"
@@ -217,18 +221,42 @@ export const useProtocolStore = create<ProtocolState>()(
       // ── Actividades complementarias ────────────────────
       activities: {},
 
-      setActivity: (date, activity) =>
+      setDayActivities: (date, list) =>
         set((state) => {
           const next = { ...state.activities };
-          if (activity === "none") {
+          if (list.length === 0) {
             delete next[date];
           } else {
-            next[date] = activity;
+            next[date] = list;
           }
           return { activities: next };
         }),
 
-      getActivity: (date) => get().activities[date] ?? "none",
+      getDayActivities: (date) => get().activities[date] ?? [],
+
+      getDayPrimaryActivity: (date) => {
+        const list = get().activities[date] ?? [];
+        if (list.length === 0) return null;
+        // Ranking de demanda metabólica/glucolítica (mayor → menor).
+        // Cuando hay varios deportes en un día, el "combustible" de la
+        // dieta se calcula con el de mayor exigencia.
+        const DEMAND: Record<Exclude<Activity, "none">, number> = {
+          futbol: 9,
+          basket: 8,
+          padel: 7,
+          tenis: 7,
+          ciclismo: 7,
+          escalar: 6,
+          natacion: 6,
+          correr: 5,
+          otros: 4,
+        };
+        let best = list[0];
+        for (const a of list) {
+          if ((DEMAND[a.value] ?? 0) > (DEMAND[best.value] ?? 0)) best = a;
+        }
+        return best;
+      },
 
       // ── Estado de comidas ──────────────────────────────
       mealStatus: {},
@@ -388,6 +416,29 @@ export const useProtocolStore = create<ProtocolState>()(
     }),
     {
       name: "protocolo-store",
+      version: 2,
+      // Migración v1 → v2: activities pasa de Record<date, Activity>
+      // (una sola por día) a Record<date, SelectedActivity[]>
+      // (lista con turno opcional).
+      migrate: (persistedState: unknown, fromVersion: number) => {
+        const state = (persistedState ?? {}) as { activities?: unknown };
+        if (fromVersion < 2 && state.activities && typeof state.activities === "object") {
+          const old = state.activities as Record<string, string>;
+          const migrated: Record<string, SelectedActivity[]> = {};
+          for (const [date, value] of Object.entries(old)) {
+            if (!value || value === "none") continue;
+            // El antiguo "varios" pasa a "otros" (renombrado).
+            const v = value === "varios" ? "otros" : value;
+            // Solo conservamos valores que existen en el nuevo catálogo.
+            const valid = ["correr", "futbol", "basket", "padel", "tenis", "natacion", "ciclismo", "escalar", "otros"];
+            if (valid.includes(v)) {
+              migrated[date] = [{ value: v as Exclude<Activity, "none">, shift: null }];
+            }
+          }
+          state.activities = migrated;
+        }
+        return state;
+      },
       storage: createJSONStorage(() => {
         if (typeof window === "undefined") {
           // SSR fallback no-op

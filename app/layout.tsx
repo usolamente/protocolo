@@ -88,6 +88,7 @@ export const viewport: Viewport = {
 // Aplica el tema antes del primer pintado para evitar parpadeo (FOUC).
 // Por defecto: modo noche.
 const themeInit = `(function(){try{var t=localStorage.getItem('protocolo-theme')||'dark';var e=document.documentElement;if(t==='dark'){e.classList.add('dark');}e.style.colorScheme=t;}catch(_){document.documentElement.classList.add('dark');}})();`;
+const sizeInit = `(function(){try{var s=localStorage.getItem('protocolo-size')||'small';document.documentElement.classList.add('size-'+s);}catch(_){document.documentElement.classList.add('size-small');}})();`;
 
 export default function RootLayout({
   children,
@@ -102,6 +103,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script dangerouslySetInnerHTML={{ __html: sizeInit }} />
       </head>
       <body className="min-h-dvh bg-ink-950 text-bone-100 antialiased">
         <main className="mx-auto max-w-md safe-area-bottom">{children}</main>
