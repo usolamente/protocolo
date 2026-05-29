@@ -419,59 +419,7 @@ export const useProtocolStore = create<ProtocolState>()(
       clearHidden: () => set(() => ({ hiddenItems: {} })),
     }),
     {
-      name: "protocolo-store",
-      version: 2,
-      // Migración v1 → v2: activities pasa de Record<date, Activity>
-      // (una sola por día) a Record<date, SelectedActivity[]>
-      // (lista con turno opcional).
-      migrate: (persistedState: unknown, fromVersion: number) => {
-        // Migración v1 → v2: activities pasa de Record<date, Activity>
-        // (una sola por día) a Record<date, SelectedActivity[]>.
-        // IMPORTANTE: devolvemos el estado COMPLETO, mutando solo
-        // activities. Si devolviéramos un objeto parcial perderíamos
-        // config, mealStatus, hiddenItems, etc., y la app crashearía
-        // al rehidratar.
-        const state: Record<string, unknown> = { ...(persistedState as object || {}) };
-
-        const acts = state.activities;
-        const needsMigration =
-          fromVersion < 2 || // versión explícita anterior
-          (acts && typeof acts === "object" && !Array.isArray(acts) &&
-            // detecta formato viejo: valores son strings (Activity) en vez de arrays
-            Object.values(acts as Record<string, unknown>).some(
-              (v) => typeof v === "string",
-            ));
-
-        if (needsMigration && acts && typeof acts === "object") {
-          const old = acts as Record<string, unknown>;
-          const migrated: Record<string, SelectedActivity[]> = {};
-          const valid = new Set([
-            "correr", "futbol", "basket", "padel", "tenis",
-            "natacion", "ciclismo", "escalar", "otros",
-          ]);
-          for (const [date, value] of Object.entries(old)) {
-            // Si ya es un array (nuevo formato), respétalo
-            if (Array.isArray(value)) {
-              migrated[date] = value as SelectedActivity[];
-              continue;
-            }
-            // Formato viejo: string
-            if (typeof value !== "string" || !value || value === "none") continue;
-            // El antiguo "varios" pasa a "otros"
-            const v = value === "varios" ? "otros" : value;
-            if (valid.has(v)) {
-              migrated[date] = [
-                { value: v as Exclude<Activity, "none">, shift: null },
-              ];
-            }
-          }
-          state.activities = migrated;
-        } else if (!acts) {
-          state.activities = {};
-        }
-
-        return state;
-      },
+      name: "protocolo-store-v2",
       storage: createJSONStorage(() => {
         if (typeof window === "undefined") {
           // SSR fallback no-op
