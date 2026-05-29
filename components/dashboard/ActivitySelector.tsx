@@ -24,10 +24,12 @@ export function ActivitySelector({
   compact?: boolean;
 }) {
   const t = useT();
-  const list = useProtocolStore((s) => {
-    const v = s.activities[date];
-    return Array.isArray(v) ? v : [];
-  });
+  // Suscríbete al objeto activities completo (referencia estable) y
+  // deriva la lista DESPUÉS, fuera del selector. Si devolviéramos un
+  // array nuevo dentro del selector causaríamos render infinito.
+  const activitiesMap = useProtocolStore((s) => s.activities);
+  const raw = activitiesMap[date];
+  const list: SelectedActivity[] = Array.isArray(raw) ? raw : [];
   const setDayActivities = useProtocolStore((s) => s.setDayActivities);
   const [open, setOpen] = useState(false);
 

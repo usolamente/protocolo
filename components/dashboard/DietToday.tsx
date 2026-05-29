@@ -34,9 +34,15 @@ export function DietToday() {
     setVariant(weekOfMonthIndex(now));
   }, []);
 
-  const primaryActivity = useProtocolStore((s) =>
-    iso ? s.getDayPrimaryActivity(iso) : null,
-  );
+  // Suscríbete al objeto activities (referencia estable) y calcula
+  // la primaria FUERA del selector. Si llamáramos a
+  // getDayPrimaryActivity dentro del selector devolveríamos un
+  // objeto nuevo en cada render y entraríamos en bucle infinito.
+  const activitiesMap = useProtocolStore((s) => s.activities);
+  const getPrimary = useProtocolStore((s) => s.getDayPrimaryActivity);
+  const primaryActivity = iso ? getPrimary(iso) : null;
+  // referencia muda para que el linter sepa que usamos activitiesMap
+  void activitiesMap;
   const somatotype = useProtocolStore((s) => s.config.somatotype);
   const soma = SOMATOTYPE_MAP[somatotype];
 
